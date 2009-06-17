@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="URQuest.Tools.DBMigrator.FileIO" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>FileIO\FileIO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="URQuest.Tools.DBMigrator.Migration">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAABAAAAAAIA=</HashCode>
+      <FileName>Migration\Migration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="URQuest.Tools.DBMigrator.SqlMigration" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Migration\SqlMigration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="URQuest.Tools.DBMigrator.DatMigration" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Migration\DatMigration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="URQuest.Tools.DBMigrator.MigrationTask" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAYAAAAAAACAA=</HashCode>
+      <FileName>Tasks\MigrationTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="URQuest.Tools.DBMigrator.DeploymentTask" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Tasks\DeploymentTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
