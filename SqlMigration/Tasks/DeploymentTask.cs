@@ -39,7 +39,7 @@ namespace SqlMigration
             /// 1. get directory of scripts
             /// 2. get migrations
 
-            List<Migration> migrations;
+            IList<Migration> migrations;
             string locationOfScripts = base.Arguments.GetArgumentValue("/sd");
 
             //parse for flag that says to include them

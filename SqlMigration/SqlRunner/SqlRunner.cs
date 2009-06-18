@@ -19,7 +19,7 @@ namespace SqlMigration
         /// <param name="runInsideTransaction">Do you want the migrations to run inside a transaction so if
         /// an error occurs it will roll back?</param>
         /// <returns>0 for success, -1 for fail</returns>
-        int StartMigrations(List<Migration> migrations, bool runInsideTransaction);
+        int StartMigrations(IList<Migration> migrations, bool runInsideTransaction);
 
         string ConnectionString { get; set; }
     }
@@ -49,7 +49,7 @@ namespace SqlMigration
         }
 
 
-        public int StartMigrations(List<Migration> migrations, bool runInsideTransaction)
+        public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction)
         {
             int success = -1;
             try

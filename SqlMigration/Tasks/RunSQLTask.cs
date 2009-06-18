@@ -1,4 +1,6 @@
-﻿namespace SqlMigration
+﻿using System.Collections.Generic;
+
+namespace SqlMigration
 {
     public class RunSQLTask : MigrationTask
     {
@@ -28,7 +30,7 @@
             string scriptDirectory = Arguments.GetArgumentValue("/sd");
             //make it look for a flag to include test data
             bool includeTestData = Arguments.DoesArgumentExist("/t");
-            var migartions = _fileIO.GetMigrationsInOrder(scriptDirectory, includeTestData); 
+            IList<Migration> migartions = _fileIO.GetMigrationsInOrder(scriptDirectory, includeTestData); 
             
 
             //grab connection string

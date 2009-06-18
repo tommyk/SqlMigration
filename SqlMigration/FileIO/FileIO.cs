@@ -6,8 +6,8 @@ namespace SqlMigration
 {
     public interface IFileIO
     {
-        List<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts);
-        List<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate);
+        IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts);
+        IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate);
         bool CreateFolder(string folderLocation);
         bool CopyFile(string fileLocation, string copyLocation);
         string ReadFileContents(string filePath);
@@ -23,13 +23,13 @@ namespace SqlMigration
         }
 
 
-        public List<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts)
+        public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts)
         {
             //push down a default datetime object (1/1/0001) since all migrations will be before that.
             return GetMigrationsInOrder(directoryOfScripts, includeTestScripts, new DateTime());
         }
 
-        public List<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate)
+        public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate)
         {
             var fileNames = new List<string>();
 

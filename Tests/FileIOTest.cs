@@ -57,7 +57,7 @@ namespace SqlMigration.Test
             using (mock.Playback())
             {
                 var fileIO = new FileIO(fileWrapper);
-                List<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false);
+                IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
                 Assert.AreEqual(dates.Count, migrationsInOrder.Count, "Should be equal in count");
@@ -106,7 +106,7 @@ namespace SqlMigration.Test
             using (mock.Playback())
             {
                 var fileIO = new FileIO(fileWrapper);
-                List<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false, secondDate);
+                IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false, secondDate);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
                 Assert.AreEqual(4, migrationsInOrder.Count, "Should be 4 since we filtered one out");
