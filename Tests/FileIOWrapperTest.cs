@@ -1,9 +1,10 @@
-﻿using URQuest.Tools.DBMigrator;
+﻿using SqlMigration;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace URQuest.Tools.DBMigrator.Test
+namespace SqlMigration.Test
 {
-    
-    
+
+
     /// <summary>
     ///This is a test class for FileIOWrapperTest and is intended
     ///to contain all FileIOWrapperTest Unit Tests
@@ -72,7 +73,7 @@ namespace URQuest.Tools.DBMigrator.Test
             string filePath = "C:\\testfolder\\asdf asdf\\filename.sql";
             string expected = "filename.sql";
             string actual;
-            actual = FileIOWrapper_Accessor.GetFileNameFromFullPath(filePath);
+            actual = FileIOWrapper.GetFileNameFromFullPath(filePath);
             Assert.AreEqual(expected, actual, "It should find the file name");
         }
     }

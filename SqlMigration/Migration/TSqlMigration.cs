@@ -1,15 +1,15 @@
-﻿namespace URQuest.Tools.DBMigrator
+﻿namespace SqlMigration
 {
-    public class SqlMigration : Migration
+    public class TSqlMigration : Migration
     {
         private readonly IFileIO _fileIO;
 
-        public SqlMigration(string filePath) 
+        public TSqlMigration(string filePath) 
             : this(filePath, new FileIO(new FileIOWrapper())) //todo: use DI to get rid of this!
         {
         }
 
-        public SqlMigration(string filePath, IFileIO fileIO)
+        public TSqlMigration(string filePath, IFileIO fileIO)
             : base(filePath)
         {
             _fileIO = fileIO;

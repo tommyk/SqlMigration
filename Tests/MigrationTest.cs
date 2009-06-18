@@ -1,8 +1,9 @@
-﻿using URQuest.Tools.DBMigrator;
+﻿using SqlMigration;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace URQuest.Tools.DBMigrator.Test
+namespace SqlMigration.Test
 {
     
     

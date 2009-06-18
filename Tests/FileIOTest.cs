@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Rhino.Mocks;
-using URQuest.Tools.DBMigrator;
+using SqlMigration;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace URQuest.Tools.DBMigrator.Test
+namespace SqlMigration.Test
 {
 
 

@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URQuest.Tools.DBMigrator", "SqlMigration\URQuest.Tools.DBMigrator.csproj", "{EA37961A-6286-4497-BA26-611682E71E03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMigration", "SqlMigration\SqlMigration.csproj", "{EA37961A-6286-4497-BA26-611682E71E03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMigration.Tests", "Tests\SqlMigration.Tests.csproj", "{253F2CB3-1330-4979-AD39-12C7C4DA92CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{EA37961A-6286-4497-BA26-611682E71E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA37961A-6286-4497-BA26-611682E71E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA37961A-6286-4497-BA26-611682E71E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253F2CB3-1330-4979-AD39-12C7C4DA92CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253F2CB3-1330-4979-AD39-12C7C4DA92CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253F2CB3-1330-4979-AD39-12C7C4DA92CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253F2CB3-1330-4979-AD39-12C7C4DA92CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

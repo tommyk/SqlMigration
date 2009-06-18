@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public interface ISqlRunner
     {

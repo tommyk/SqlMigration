@@ -1,4 +1,4 @@
-﻿namespace URQuest.Tools.DBMigrator
+﻿namespace SqlMigration
 {
     public class RunSQLTask : MigrationTask
     {

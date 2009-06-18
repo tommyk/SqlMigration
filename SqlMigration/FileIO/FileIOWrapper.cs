@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public interface IFileIOWrapper
     {
@@ -13,7 +13,7 @@ namespace URQuest.Tools.DBMigrator
         List<string> ReadDirectoryFilenames(string directoryPath);
     }
 
-    internal class FileIOWrapper : IFileIOWrapper
+    public class FileIOWrapper : IFileIOWrapper
     {
         public bool Copy(string filePath, string locationToCopyTo)
         {
@@ -81,7 +81,7 @@ namespace URQuest.Tools.DBMigrator
 
        
         [Obsolete("Just use ToString on the migration object base class")]
-        private static string GetFileNameFromFullPath(string filePath)
+        public static string GetFileNameFromFullPath(string filePath)
         {
             StringBuilder sb = new StringBuilder(64);
             List<char> fileName = new List<char>();

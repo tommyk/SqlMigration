@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public interface IFileIO
     {
@@ -45,7 +45,7 @@ namespace URQuest.Tools.DBMigrator
             {
                 //add migration
                 if (fileName.EndsWith(".sql"))
-                    migrations.Add(new SqlMigration(fileName));
+                    migrations.Add(new TSqlMigration(fileName));
                 else if (fileName.EndsWith(".dat"))
                     migrations.Add(new DatMigration(fileName));
             }

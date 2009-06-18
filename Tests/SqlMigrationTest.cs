@@ -1,7 +1,8 @@
 ﻿using Rhino.Mocks;
-using URQuest.Tools.DBMigrator;
+using SqlMigration;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace URQuest.Tools.DBMigrator.Test
+namespace SqlMigration.Test
 {
     
     
@@ -85,7 +86,7 @@ namespace URQuest.Tools.DBMigrator.Test
             }
             using(mock.Playback())
             {
-                var sqlMigration = new SqlMigration(filePath, fileIO);
+                var sqlMigration = new TSqlMigration(filePath, fileIO);
                 string sqlCommand = sqlMigration.GetSqlCommand();
 
                 Assert.AreEqual(fileContents, sqlCommand, "This should be the same contents");
@@ -121,7 +122,7 @@ TEST";
             }
             using (mock.Playback())
             {
-                var sqlMigration = new SqlMigration(filePath, fileIO);
+                var sqlMigration = new TSqlMigration(filePath, fileIO);
                 string sqlCommand = sqlMigration.GetSqlCommand();
 
                 Assert.AreEqual(expectedResults, sqlCommand, "This should contain no GO or go statements");

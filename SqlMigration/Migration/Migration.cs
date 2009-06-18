@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public abstract class Migration
     {

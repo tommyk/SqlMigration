@@ -8,8 +8,8 @@
     <ProjectGuid>{EA37961A-6286-4497-BA26-611682E71E03}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>URQuest.Tools.DBMigrator</RootNamespace>
-    <AssemblyName>URQuest.Tools.DBMigrator</AssemblyName>
+    <RootNamespace>SqlMigration</RootNamespace>
+    <AssemblyName>SqlMigration</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -59,7 +59,7 @@
     <Compile Include="Migration\DateParser.cs" />
     <Compile Include="Migration\DatMigration.cs" />
     <Compile Include="Migration\Migration.cs" />
-    <Compile Include="Migration\SqlMigration.cs" />
+    <Compile Include="Migration\TSqlMigration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource1.Designer.cs">

@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using URQuest.Tools.DBMigrator;
+using SqlMigration;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace URQuest.Tools.DBMigrator.Test
+namespace SqlMigration.Test
 {
 
 

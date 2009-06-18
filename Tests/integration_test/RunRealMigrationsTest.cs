@@ -4,8 +4,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SqlMigration;
 
-namespace URQuest.Tools.DBMigrator.Test.integration_test
+namespace SqlMigration.Test.integration_test
 {
     /// <summary>
     /// Summary description for RunRealMigrationsTest

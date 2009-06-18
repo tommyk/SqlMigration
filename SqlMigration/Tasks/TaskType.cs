@@ -1,4 +1,4 @@
-﻿namespace URQuest.Tools.DBMigrator
+﻿namespace SqlMigration
 {
     public enum TaskType
     {

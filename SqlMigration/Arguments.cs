@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     /// Arugments:
     /// Task Types -- Always first argument!

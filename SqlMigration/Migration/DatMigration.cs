@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public class DatMigration : Migration
     {

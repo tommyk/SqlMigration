@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace URQuest.Tools.DBMigrator
+namespace SqlMigration
 {
     public class DateParser
     {
