@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using NUnit.Framework;
 using SqlMigration;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace SqlMigration.Test
@@ -12,33 +12,16 @@ namespace SqlMigration.Test
     ///This is a test class for ArgumentsTest and is intended
     ///to contain all ArgumentsTest Unit Tests
     ///</summary>
-    [TestClass()]
+    //[TestFixture]
+    [TestFixture]
     public class ArgumentsTest
     {
 
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
         /// <summary>
         ///A test for TaskType
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void make_sure_it_finds_deployment_task()
         {
             string[] arguments = new[] {"/d", "C:\\test"}; // TODO: Initialize to an appropriate value
@@ -50,7 +33,7 @@ namespace SqlMigration.Test
             Assert.AreEqual(task, actual, "The task type should match up");
         }
 
-        [TestMethod()]
+        [Test]
         public void make_sure_it_finds_migration_task()
         {
             string[] arguments = new[] { "/m" }; // TODO: Initialize to an appropriate value
@@ -63,7 +46,7 @@ namespace SqlMigration.Test
         }
 
 
-        [TestMethod()]
+        [Test]
         public void find_argument_value()
         {
             string loc = @"C:\test";
@@ -81,7 +64,7 @@ namespace SqlMigration.Test
         /// <summary>
         ///A test for DoesArgumentExist
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void DoesArgumentExist_yes_it_does()
         {
             string[] arguments = new[]{"test", "asdf", "/nt"}; 
@@ -93,7 +76,7 @@ namespace SqlMigration.Test
             Assert.IsTrue(actual, "We should find that argument");
         }
 
-        [TestMethod()]
+        [Test]
         public void no_scriptDirectory_passed_in_so_we_default_to_working_directory()
         {
             string[] arguments = new[] { "test", "asdf", "/nt" };
@@ -111,7 +94,7 @@ namespace SqlMigration.Test
         /// <summary>
         ///A test for GetArgumentValue
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void make_sure_we_dont_go_over_the_size_of_the_colletion_of_arguements()
         {
             string[] arguments = new[]{"flag1"}; 

@@ -1,6 +1,6 @@
-﻿using SqlMigration;
+﻿using NUnit.Framework;
+using SqlMigration;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace SqlMigration.Test
@@ -11,32 +11,14 @@ namespace SqlMigration.Test
     ///This is a test class for MigrationTest and is intended
     ///to contain all MigrationTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestFixture]
     public class MigrationTest
     {
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
 
         /// <summary>
         ///A test for MigrationDate
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void test_date_parser_with_working_date()
         {
             //test file path
@@ -69,7 +51,7 @@ namespace SqlMigration.Test
         /// <summary>
         ///A test for ToString
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void ToStringTest()
         {
             var migration = new TestMigration("C:\\test\\this_is_the_file_name.txt");

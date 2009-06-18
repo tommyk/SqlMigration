@@ -1,49 +1,28 @@
 ﻿using System;
 using System.Data;
+using NUnit.Framework;
 using Rhino.Mocks;
 using SqlMigration;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace SqlMigration.Test
 {
-
-
     /// <summary>
     ///This is a test class for SqlRunnerTest and is intended
     ///to contain all SqlRunnerTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestFixture]
     public class SqlRunnerTest
     {
-
-
-        private TestContext testContextInstance;
         private MockRepository _mock;
         private IDbConnection _iConnection;
         private IDbCommand _iCommand;
         private IDbTransaction _iTransaction;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
 
         //Use TestInitialize to run code before running each test
-        [TestInitialize()]
+        [SetUp]
         public void MyTestInitialize()
         {
             //setup mocks
@@ -58,7 +37,7 @@ namespace SqlMigration.Test
         /// <summary>
         ///A test for StartMigrations
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void mock_running_two_fake_sql_file_with_no_errors()
         {
             //setup fake migrations
@@ -89,7 +68,7 @@ namespace SqlMigration.Test
             }
         }
 
-        [TestMethod()]
+        [Test]
         public void mock_two_migrations_NOT_running_under_a_transaction()
         {
             //setup fake migrations

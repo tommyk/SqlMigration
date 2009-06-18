@@ -1,66 +1,23 @@
 ﻿using System;
 using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SqlMigration;
+using NUnit.Framework;
 
 namespace SqlMigration.Test.integration_test
 {
     /// <summary>
     /// Summary description for RunRealMigrationsTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RunRealMigrationsTest
     {
-        private TestContext testContextInstance;
         private DateTime? last_date_used;
         private const string CONNECTION_STRING = "Server=localhost;Trusted_Connection=True;";
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
 
 
         /// This file will need to run in a certain order to work.  Please
         /// be careful changing anything with the tests.
 
-        [TestMethod]
+        [Test]
         public void run_real_migrations_that_pass_and_create_a_database_and_one_table_named_names()
         {
             //setup the files and get directory
@@ -75,7 +32,7 @@ namespace SqlMigration.Test.integration_test
             //todo: hit db and test for table existence?
         }
 
-        [TestMethod]
+        [Test]
         public void failing_transaction_that_should_leave_NO_rows_in_the_names_table()
         {
             string migrationDirectory = Environment.CurrentDirectory + "\\fail_transaction";
@@ -99,7 +56,7 @@ namespace SqlMigration.Test.integration_test
             //todo: check db for no rows...?
         }
 
-        [TestMethod]
+        [Test]
         public void passing_transaction_that_should_leave_3_rows_in_the_names_table()
         {
             string migrationDirectory = Environment.CurrentDirectory + "\\passing_transaction";

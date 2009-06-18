@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework;
 using Rhino.Mocks;
 using SqlMigration;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace SqlMigration.Test
 {
 
@@ -13,35 +14,10 @@ namespace SqlMigration.Test
     ///This is a test class for DeploymentTaskTest and is intended
     ///to contain all DeploymentTaskTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestFixture]
     public class DeploymentTaskTest
     {
 
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-
-        //Use TestInitialize to run code before running each test
-        [TestInitialize()]
-        public void MyTestInitialize()
-        {
-        }
 
         //todo: Get rid of the dup'd code for testing!!!!
 
@@ -49,7 +25,7 @@ namespace SqlMigration.Test
         /// <summary>
         ///A test for RunTask
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void run_deployment_on_all_migrations()
         {
             //argument stuff
@@ -109,7 +85,7 @@ namespace SqlMigration.Test
 
         }
 
-        [TestMethod()]
+        [Test]
         public void run_deployment_on_filtered_date()
         {
             //argument stuff
