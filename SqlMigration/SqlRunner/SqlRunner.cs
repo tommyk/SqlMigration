@@ -35,7 +35,8 @@ namespace SqlMigration
             : this(null, null)
         {
         }
-
+        
+        //todo: can't the transactoin be created by the connection object?????
         public SqlRunner(IDbConnection connection, IDbTransaction transaction)
         {
             _connection = connection;
@@ -54,6 +55,7 @@ namespace SqlMigration
             int success = -1;
             try
             {
+                //todo: FAIL IF CONNECTION IS NULL
                 //create a connection to database
                 if (_connection == null)
                     _connection = new SqlConnection(_connectionString);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
+using SqlMigration.Runner;
 
 namespace SqlMigration.Test.integration_test
 {

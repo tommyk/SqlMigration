@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SqlMigration
+namespace SqlMigration.Runner
 {
     public class Program
     {
@@ -47,9 +47,11 @@ namespace SqlMigration
             else
             {
                 //no args were passed in, lets display the help contents
-                string helpFile = Resource1.HelpInstructions;
+                string helpFile = Resources.HelpInstructions;
                 Console.Write(helpFile);
             }
+
+            Console.Read();
 
             return returnValue;
         }

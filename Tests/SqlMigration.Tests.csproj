@@ -75,6 +75,10 @@
     <Compile Include="SqlRunnerTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SqlMigration.Runner\SqlMigration.Runner.csproj">
+      <Project>{5A28ABF0-2127-4E9E-B87C-AF72629891BD}</Project>
+      <Name>SqlMigration.Runner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SqlMigration\SqlMigration.csproj">
       <Project>{EA37961A-6286-4497-BA26-611682E71E03}</Project>
       <Name>SqlMigration</Name>

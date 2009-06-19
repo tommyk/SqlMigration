@@ -5,11 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SqlMigration")]
-[assembly: AssemblyDescription("A tool to run sql files as database migrations")]
+[assembly: AssemblyTitle("SqlMigration.Runner")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("tommy.kelly")]
-[assembly: AssemblyProduct("SqlMigration")]
+[assembly: AssemblyCompany("Belron US")]
+[assembly: AssemblyProduct("SqlMigration.Runner")]
+[assembly: AssemblyCopyright("Copyright © Belron US 2009")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -18,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fbe4476b-7fd1-4d30-9cfe-165c52ce477c")]
+[assembly: Guid("3717d98f-4119-43be-b4bb-19f8e801230b")]
 
 // Version information for an assembly consists of the following four values:
 //
