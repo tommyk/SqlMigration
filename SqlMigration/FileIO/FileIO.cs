@@ -29,6 +29,8 @@ namespace SqlMigration
             return GetMigrationsInOrder(directoryOfScripts, includeTestScripts, new DateTime());
         }
 
+
+        //todo: do we really need the filter date?
         public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate)
         {
             var fileNames = new List<string>();
@@ -43,11 +45,13 @@ namespace SqlMigration
             var migrations = new List<Migration>();
             foreach (string fileName in fileNames)
             {
+                //todo: make this not be hard coded for only sql files.  Do some magic and allow people to 
+                //overload and add their own style of migrations in the future
                 //add migration
                 if (fileName.EndsWith(".sql"))
                     migrations.Add(new TSqlMigration(fileName));
-                else if (fileName.EndsWith(".dat"))
-                    migrations.Add(new DatMigration(fileName));
+                //else if (fileName.EndsWith(".dat"))
+                //    migrations.Add(new DatMigration(fileName));
             }
 
             return migrations

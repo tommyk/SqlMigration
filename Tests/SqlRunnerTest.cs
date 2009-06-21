@@ -57,7 +57,7 @@ namespace SqlMigration.Test
 
                 //make sure it hits the db with the command
                 Expect.Call(_iCommand.ExecuteNonQuery())
-                    .Repeat.Times(2)
+                    .Repeat.Times(4) //because we are acting like there are two items in the command
                     .Return(0);
             }
             using(_mock.Playback())

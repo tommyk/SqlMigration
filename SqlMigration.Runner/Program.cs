@@ -39,6 +39,7 @@ namespace SqlMigration.Runner
                 }
                 catch (Exception ex)
                 {
+                    throw ex;
                     //todo: Log error possibly?
                     Console.WriteLine(ex.Message);
                     returnValue = -1;
@@ -50,9 +51,6 @@ namespace SqlMigration.Runner
                 string helpFile = Resources.HelpInstructions;
                 Console.Write(helpFile);
             }
-
-            Console.Read();
-
             return returnValue;
         }
 

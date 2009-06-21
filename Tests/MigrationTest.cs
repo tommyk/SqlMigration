@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using SqlMigration;
 
 using System;
@@ -42,6 +43,11 @@ namespace SqlMigration.Test
             public override string GetSqlCommand()
             {
                 throw new System.NotImplementedException();
+            }
+
+            public override IList<string> GetSqlCommands()
+            {
+                throw new NotImplementedException();
             }
         }
 

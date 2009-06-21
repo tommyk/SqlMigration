@@ -29,13 +29,13 @@ namespace SqlMigration
         private string _connectionString;
         private IDbConnection _connection;
         private IDbTransaction _transaction;
-        private IDbCommand _command;
+        //private IDbCommand _command;
 
         public SqlRunner()
             : this(null, null)
         {
         }
-        
+
         //todo: can't the transactoin be created by the connection object?????
         public SqlRunner(IDbConnection connection, IDbTransaction transaction)
         {
@@ -52,6 +52,8 @@ namespace SqlMigration
 
         public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction)
         {
+            //setup command to be reused 
+            IDbCommand command = null;
             int success = -1;
             try
             {
@@ -66,20 +68,23 @@ namespace SqlMigration
                     _transaction = _connection.BeginTransaction();
 
                 //create sql command object
-                _command = _connection.CreateCommand();
-                _command.Connection = _connection;
+                command = _connection.CreateCommand();
+                command.Connection = _connection;
                 //hook into transaction
                 if (runInsideTransaction)
-                    _command.Transaction = _transaction;
+                    command.Transaction = _transaction;
 
                 //loop on migrations
                 foreach (Migration migration in migrations)
                 {
-                    //todo: log with a logger class, not just console
-                    Console.WriteLine(string.Format("Running migration\t'{0}'", migration));
-                    //grab sql and run it
-                    _command.CommandText = migration.GetSqlCommand();
-                    _command.ExecuteNonQuery();
+                    //run each sql command by itself
+                    foreach (string sqlCommand in migration.GetSqlCommands())
+                    {
+                        //todo:replace with logger implemetation
+                        Console.WriteLine(string.Format("Running command = '{0}'", sqlCommand));
+                        command.CommandText = sqlCommand;
+                        command.ExecuteNonQuery();
+                    }
                 }
 
                 //commit transaction if we are running under one
