@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="FileIO\FileIO.cs" />
     <Compile Include="FileIO\FileIOWrapper.cs" />
@@ -68,9 +71,6 @@
     <Compile Include="Tasks\MigrationTask.cs" />
     <Compile Include="Tasks\RunSQLTask.cs" />
     <Compile Include="Tasks\TaskType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Class Diagram\ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
