@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
+using SqlMigration;
 
-namespace SqlMigration.Test
+namespace Tests
 {
     /// <summary>
     ///This is a test class for FileIOWrapperTest and is intended

@@ -5,9 +5,8 @@ using Rhino.Mocks;
 using SqlMigration;
 
 using System.Collections.Generic;
-using Tests;
 
-namespace SqlMigration.Test
+namespace Tests
 {
     /// <summary>
     ///This is a test class for SqlRunnerTest and is intended

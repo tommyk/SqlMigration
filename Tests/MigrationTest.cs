@@ -4,10 +4,8 @@ using SqlMigration;
 
 using System;
 
-namespace SqlMigration.Test
+namespace Tests
 {
-    
-    
     /// <summary>
     ///This is a test class for MigrationTest and is intended
     ///to contain all MigrationTest Unit Tests

@@ -4,10 +4,8 @@ using Rhino.Mocks;
 using SqlMigration;
 
 
-namespace SqlMigration.Test
+namespace Tests
 {
-
-
     /// <summary>
     ///This is a test class for RunSQLTaskTest and is intended
     ///to contain all RunSQLTaskTest Unit Tests

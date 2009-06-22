@@ -67,7 +67,7 @@
     <Compile Include="DeploymentTaskTest.cs" />
     <Compile Include="FileIOTest.cs" />
     <Compile Include="FileIOWrapperTest.cs" />
-    <Compile Include="integration_test\RunRealMigrationsTest.cs" />
+    <Compile Include="IntegrationTests\RunRealMigrationsTest.cs" />
     <Compile Include="MigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Sql_Files.cs" />

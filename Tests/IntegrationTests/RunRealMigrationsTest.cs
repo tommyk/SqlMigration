@@ -2,9 +2,9 @@
 using System.IO;
 using NUnit.Framework;
 using SqlMigration.Runner;
-using Tests;
+using SqlMigration.Test;
 
-namespace SqlMigration.Test.integration_test
+namespace Tests.IntegrationTests
 {
     /// <summary>
     /// Summary description for RunRealMigrationsTest
