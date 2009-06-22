@@ -5,3 +5,5 @@ _ReSharper*
 *.suo
 *.pdb
 *.user
+*.trx
+TestResults/
