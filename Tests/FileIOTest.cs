@@ -1,15 +1,17 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SqlMigration;
 
 using System.Collections.Generic;
 
-namespace SqlMigration.Test
+namespace Tests
 {
-
-
     /// <summary>
     ///This is a test class for FileIOTest and is intended
     ///to contain all FileIOTest Unit Tests
@@ -115,6 +117,24 @@ namespace SqlMigration.Test
                 Assert.AreEqual(fourthDate, migrationsInOrder[2].MigrationDate, "date should come back in order");
                 Assert.AreEqual(fifthDate, migrationsInOrder[3].MigrationDate, "date should come back in order");
             }
+        }
+
+        [Test]
+        public void ReadAndWriteFile()
+        {
+            string currentLocation = AppDomain.CurrentDomain.BaseDirectory; //Assembly.GetExecutingAssembly().Location;
+            string fileLocationWithName = currentLocation + "\\test.txt";
+
+            //attempt to write out a file called test.txt
+            var fileIO = new FileIO(null);
+
+            string contents = "THIS IS GENERATED IN A UNIT TEST";
+            fileIO.WriteFile(fileLocationWithName, contents);
+
+            Assert.That(fileIO.ReadFileContents(fileLocationWithName), Is.EqualTo(contents));
+
+            //clean up?
+            File.Delete(fileLocationWithName);
         }
 
 

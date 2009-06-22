@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SqlMigration;
 
 
-namespace SqlMigration.Test
+namespace Tests
 {
-
-
     /// <summary>
     ///This is a test class for DeploymentTaskTest and is intended
     ///to contain all DeploymentTaskTest Unit Tests
     ///</summary>
     [TestFixture]
-    public class DeploymentTaskTest
+    public class DeploymentTaskTest : BaseTestClass
     {
+        private IFileIO iFileIO;
 
+        public DeploymentTaskTest()
+        {
+            base.Setup += SetupTests;
+        }
+
+        void SetupTests(object sender, EventArgs e)
+        {
+            this.iFileIO = Mock.StrictMock<IFileIO>();
+        }
 
         //todo: Get rid of the dup'd code for testing!!!!
 
@@ -26,9 +33,10 @@ namespace SqlMigration.Test
         ///A test for RunTask
         ///</summary>
         [Test]
-        public void run_deployment_on_all_migrations()
+        public void create_deploy_script_on_all_migrations()
         {
             //argument stuff
+            string scriptDirectory = "c:\test";
             string locationToDeploy = @"a:\test";
 
             //fake dates to test against
@@ -40,109 +48,40 @@ namespace SqlMigration.Test
             migrations.Add(FileIOTest.CreateMigrationObject(secondDate));
             migrations.Add(FileIOTest.CreateMigrationObject(firstDate));
 
+            string fileContents = @"command1
+GO
+command2
+GO
+command1
+GO
+command2
+GO
+";
 
-            var mock = new MockRepository();
-            var iFileIO = mock.CreateMock<IFileIO>();
 
-            using(mock.Record())
+            using (Mock.Record())
             {
                 //get the migrations (all of them in this case)
-                Expect.Call(iFileIO.GetMigrationsInOrder(locationToDeploy, true))
+                Expect.Call(iFileIO.GetMigrationsInOrder(scriptDirectory, true))
                     .Return(migrations);
 
-                //expect call to create working directory
-                Expect.Call(iFileIO.CreateFolder(locationToDeploy))
-                    .IgnoreArguments()
-                    .Return(true);
-
-                //expect call for each file to be copied
-                foreach (var migration in migrations)
-                {
-                    Expect.Call(iFileIO.CopyFile(migration.FilePath, locationToDeploy))
-                        .IgnoreArguments()
-                        .Return(true);
-                }
-
-                //todo: add copy the tool itself
-                Expect.Call(iFileIO.CopyFile(null, null))
-                    .IgnoreArguments()
-                    .Return(true);
+                //write out deployment script
+                Expect.Call(() => iFileIO.WriteFile(locationToDeploy, fileContents));
 
             }
-            using(mock.Playback())
+            using (Mock.Playback())
             {
                 //act like we are pulling and pushing from a:\test, just easier to test against one location
-                var args = new Arguments(new[] { "/d", "/sd", locationToDeploy, "/cd", locationToDeploy, "/t" });
-                var deploymentTask = new DeploymentTask(args, iFileIO);
-              
-                //try to run task
-                int returnVal = deploymentTask.RunTask();
-
-                Assert.AreEqual(0, returnVal, "We should get a clean run from this");
-
-            }
-
-
-        }
-
-        [Test]
-        public void run_deployment_on_filtered_date()
-        {
-            //argument stuff
-            string locationToDeploy = @"a:\test";
-
-            //fake dates to test against
-            var firstDate = DateTime.Parse("1-1-2008 1:11:00Z");
-            var secondDate = DateTime.Parse("1-1-2008 1:12:00Z");
-
-            //create fake list to pass back
-            var migrations = new List<Migration>();
-            migrations.Add(FileIOTest.CreateMigrationObject(secondDate));
-            migrations.Add(FileIOTest.CreateMigrationObject(firstDate));
-
-
-            var mock = new MockRepository();
-            var iFileIO = mock.CreateMock<IFileIO>();
-
-            using (mock.Record())
-            {
-                //get the migrations (all of them in this case)
-                Expect.Call(iFileIO.GetMigrationsInOrder(locationToDeploy, true, new DateTime(2008, 1, 1, 1, 1,0)))
-                    .Return(migrations);
-
-                //expect call to create working directory
-                Expect.Call(iFileIO.CreateFolder(locationToDeploy))
-                    .IgnoreArguments()
-                    .Return(true);
-
-                //expect call for each file to be copied
-                foreach (var migration in migrations)
-                {
-                    Expect.Call(iFileIO.CopyFile(migration.FilePath, locationToDeploy))
-                        .IgnoreArguments()
-                        .Return(true);
-                }
-
-                //todo: add copy the tool itself
-                Expect.Call(iFileIO.CopyFile(null, null))
-                    .IgnoreArguments()
-                    .Return(true);
-
-            }
-            using (mock.Playback())
-            {
-                //act like we are pulling and pushing from a:\test, just easier to test against one location
-                var args = new Arguments(new[] { "/d", "/sd", locationToDeploy, "/cd", locationToDeploy, "/t", "/date", "2008-01-01_01h01m" });
+                var args = new Arguments(new[] { "/d", locationToDeploy, "/sd", scriptDirectory, "/t" });
                 var deploymentTask = new DeploymentTask(args, iFileIO);
 
                 //try to run task
                 int returnVal = deploymentTask.RunTask();
 
                 Assert.AreEqual(0, returnVal, "We should get a clean run from this");
-
             }
-
-
         }
+
+
     }
 }

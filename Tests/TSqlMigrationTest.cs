@@ -126,5 +126,33 @@ GO";
                 Assert.That(sqlCommand[3], Is.Not.EqualTo("testmultiplelines"));
             }
         }
+
+        [Test]
+        public void no_GO_statements()
+        {
+
+            string filePath = "C:\\test";
+            string fileContents = @"test contents category
+Test
+TEST";
+            using (Mock.Record())
+            {
+                //try to read the file
+                Expect.Call(_fileIo.ReadFileContents(filePath))
+                    .Return(fileContents);
+            }
+            using (Mock.Playback())
+            {
+                var sqlMigration = new TSqlMigration(filePath, _fileIo);
+                IList<string> sqlCommand = sqlMigration.GetSqlCommands();
+
+                //there should be 3 commands inside this fake sql file
+                Assert.That(sqlCommand.Count, Is.EqualTo(1));
+
+                Assert.That(sqlCommand[0], Is.EqualTo(fileContents));
+            }
+        }
     }
+
+
 }

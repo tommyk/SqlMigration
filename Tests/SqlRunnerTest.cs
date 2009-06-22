@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using SqlMigration;
 
 using System.Collections.Generic;
+using Tests;
 
 namespace SqlMigration.Test
 {

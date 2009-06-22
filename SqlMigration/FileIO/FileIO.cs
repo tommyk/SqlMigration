@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SqlMigration
@@ -11,12 +12,14 @@ namespace SqlMigration
         bool CreateFolder(string folderLocation);
         bool CopyFile(string fileLocation, string copyLocation);
         string ReadFileContents(string filePath);
+        void WriteFile(string locationOfFile, string fileContents);
     }
 
     public class FileIO : IFileIO
     {
         private readonly IFileIOWrapper _fileOperationsWrapper;
 
+        //todo: take out the file wrapper, its unnecessary
         public FileIO(IFileIOWrapper fileWrapper)
         {
             _fileOperationsWrapper = fileWrapper;
@@ -72,7 +75,13 @@ namespace SqlMigration
 
         public string ReadFileContents(string filePath)
         {
-            return _fileOperationsWrapper.ReadConentsOfFile(filePath);
+            return File.ReadAllText(filePath);
+            //return _fileOperationsWrapper.ReadConentsOfFile(filePath);
+        }
+
+        public void WriteFile(string locationOfFile, string contents)
+        {
+            File.WriteAllText(locationOfFile, contents);
         }
     }
 }

@@ -4,9 +4,14 @@
     so they can be rolled back.  If you want to avoid
     running in a transaction, use the /nt flag.
 
-/d - Create a folder with all the neccessary files
-    to update the database.  Also pushes out a copy
-    of the tool to run from the local directory.
+/d - Creates a script that contains all the commands
+    that would be run on the database.  This is used for
+    deploying to servers where its hard to run the 
+    migration tool to apply changes.  You NEED to pass 
+    in the location of the file you want the changes to
+    be put in after the /d flag.
+    
+    Ex. /d c:\my_db_changes.sql
 
 
 =====================Flags=====================

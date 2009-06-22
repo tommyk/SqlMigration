@@ -70,6 +70,10 @@ namespace SqlMigration
 
             }
 
+            //incase there was no GO statement we need to add the command that was running through
+            if(oneCommand != string.Empty)
+                commands.Add(oneCommand);
+
 
             return commands;
         }
