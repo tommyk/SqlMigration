@@ -159,11 +159,11 @@ namespace SqlMigration.Test
             public override IList<string> GetSqlCommands()
             {
                 //return two sql commands
-                return new[] {"command1", "command2"};
+                return new[] { "command1", "command2" };
             }
         }
         #endregion
 
-       
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Data.Sql;
@@ -26,6 +28,7 @@ namespace SqlMigration
 
     public class SqlRunner : ISqlRunner
     {
+        private const string SQLMIGRATION_TABLE_NAME = "SqlMigration";
         private string _connectionString;
         private IDbConnection _connection;
         private IDbTransaction _transaction;
@@ -70,12 +73,16 @@ namespace SqlMigration
                 //create sql command object
                 command = _connection.CreateCommand();
                 command.Connection = _connection;
+
                 //hook into transaction
                 if (runInsideTransaction)
                     command.Transaction = _transaction;
 
+                //check to see which migration we should should run that have not been run yet
+                IList<string> migrationsThatHaveAlreadyBeenRun = SetupAndCheckWhatMigrationsShouldBeRun(command);
+
                 //loop on migrations
-                foreach (Migration migration in migrations)
+                foreach (Migration migration in migrations.Where(m=> !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
                 {
                     //run each sql command by itself
                     foreach (string sqlCommand in migration.GetSqlCommands())
@@ -85,6 +92,11 @@ namespace SqlMigration
                         command.CommandText = sqlCommand;
                         command.ExecuteNonQuery();
                     }
+
+                    //insert into table the name of the migration that was run
+                    command.CommandText = string.Format("INSERT INTO {0} VALUES ('{1}');", SQLMIGRATION_TABLE_NAME,
+                                                        migration.ToString());
+                    command.ExecuteNonQuery();
                 }
 
                 //commit transaction if we are running under one
@@ -118,6 +130,32 @@ namespace SqlMigration
             }
 
             return success;
+        }
+
+        private IList<string> SetupAndCheckWhatMigrationsShouldBeRun(IDbCommand command)
+        {
+            //first check for the table
+            command.CommandText = string.Format("SELECT case when object_id('{0}')is not null then 1 else 0 end", SQLMIGRATION_TABLE_NAME);
+
+            bool isTableSetup = (int)command.ExecuteScalar() > 0;
+            //if its not there, create it
+            if (!isTableSetup)
+            {
+                command.CommandText = "CREATE TABLE SqlMigration (	[Name]  varchar(128) not null )";
+                command.ExecuteNonQuery();
+            }
+
+            //now see what migration names are in the table
+            var migrationNames = new List<string>();
+
+            command.CommandText = "SELECT [Name] FROM SqlMigration";
+            IDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                migrationNames.Add(reader.GetString(0));
+            //close the reader
+            reader.Close();
+
+            return migrationNames;
         }
     }
 }
