@@ -7,44 +7,26 @@ using System.Data.SqlClient;
 
 namespace SqlMigration
 {
-    public interface ISqlRunner
-    {
-        /// <summary>
-        /// Starts running the migrations
-        /// </summary>
-        /// <param name="migrations"></param>
-        /// <param name="runInsideTransaction">Do you want the migrations to run inside a transaction so if
-        /// an error occurs it will roll back?</param>
-        /// <returns>0 for success, -1 for fail</returns>
-        int StartMigrations(IList<Migration> migrations, bool runInsideTransaction, bool trackMigrations);
-
-        string ConnectionString { get; set; }
-    }
-
     public class SqlRunner : ISqlRunner
     {
         private const string SQLMIGRATION_TABLE_NAME = "SqlMigration";
-        private string _connectionString;
-        private IDbConnection _connection;
-        private IDbTransaction _transaction;
-        //private IDbCommand _command;
+        private readonly IDbConnection _connection;
 
         public SqlRunner()
-            : this(null, null)
+            : this(null)
         {
         }
 
-        //todo: can't the transactoin be created by the connection object?????
-        public SqlRunner(IDbConnection connection, IDbTransaction transaction)
+        public SqlRunner(IDbConnection connection)
         {
+            if(connection == null) throw new ArgumentNullException("Connection must not be null");
             _connection = connection;
-            _transaction = transaction;
         }
 
         public string ConnectionString
         {
-            get { return _connectionString; }
-            set { _connectionString = value; }
+            get { return _connection.ConnectionString; }
+            set { _connection.ConnectionString= value; }
         }
 
 
@@ -52,18 +34,17 @@ namespace SqlMigration
         {
             //setup command to be reused 
             IDbCommand command = null;
+            IDbTransaction transaction = null;
+
             int success = -1;
             try
             {
-                //todo: FAIL IF CONNECTION IS NULL
                 //create a connection to database
-                if (_connection == null)
-                    _connection = new SqlConnection(_connectionString);
                 _connection.Open();
 
                 //START TRANSACTION
                 if (runInsideTransaction)
-                    _transaction = _connection.BeginTransaction();
+                    transaction = _connection.BeginTransaction();
 
                 //create sql command object
                 command = _connection.CreateCommand();
@@ -71,7 +52,7 @@ namespace SqlMigration
 
                 //hook into transaction
                 if (runInsideTransaction)
-                    command.Transaction = _transaction;
+                    command.Transaction = transaction;
 
                 //check to see which migration we should should run that have not been run yet
                 IList<string> migrationsThatHaveAlreadyBeenRun = trackMigrations 
@@ -101,7 +82,7 @@ namespace SqlMigration
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
-                    _transaction.Commit();
+                    transaction.Commit();
 
                 //mark success
                 success = 0;
@@ -110,12 +91,12 @@ namespace SqlMigration
             {
                 try
                 {
-                    if (_transaction != null)
-                        _transaction.Rollback();
+                    if (transaction != null)
+                        transaction.Rollback();
                 }
                 catch (SqlException ex)
                 {
-                    if (_transaction.Connection != null)
+                    if (transaction.Connection != null)
                         Console.WriteLine("Exception" + ex.GetType() + " encountered while rolling back transaction.");
                 }
                 Console.WriteLine("Exception " + e.GetType() + " encountered while running sql files.");

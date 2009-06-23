@@ -61,16 +61,18 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="FileIO\FileIO.cs" />
     <Compile Include="FileIO\FileIOWrapper.cs" />
-    <Compile Include="Migration\DateParser.cs" />
-    <Compile Include="Migration\Migration.cs" />
+    <Compile Include="Contracts\IFileIO.cs" />
+    <Compile Include="DateParser.cs" />
+    <Compile Include="Contracts\Migration.cs" />
     <Compile Include="Migration\TSqlMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Contracts\ISqlRunner.cs" />
     <Compile Include="SqlRunner\SqlRunner.cs" />
     <Compile Include="Tasks\DeploymentTask.cs" />
-    <Compile Include="Tasks\MigrationTask.cs" />
+    <Compile Include="Contracts\MigrationTask.cs" />
     <Compile Include="Tasks\MigrateDatabaseForwardTask.cs" />
     <Compile Include="Tasks\RunSqlFileTask.cs" />
-    <Compile Include="Tasks\TaskType.cs" />
+    <Compile Include="TaskType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

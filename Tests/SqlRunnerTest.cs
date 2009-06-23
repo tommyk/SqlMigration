@@ -92,7 +92,7 @@ namespace Tests
             }
             using(_mock.Playback())
             {
-                var sqlRunner = new SqlRunner(_iConnection, _iTransaction);
+                var sqlRunner = new SqlRunner(_iConnection);
                 sqlRunner.ConnectionString = string.Empty;
                 sqlRunner.StartMigrations(migrations, true, true);
             }
