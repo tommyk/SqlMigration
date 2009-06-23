@@ -24,7 +24,7 @@ namespace Tests
         {
             string[] arguments = new[] {"/d", "C:\\test"}; // TODO: Initialize to an appropriate value
             Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
-            var task = TaskType.CreateDeploymentFolder;
+            var task = TaskType.CreateDeploymentScript;
             var actual = target.TaskType;
             
             //make sure they are equal
@@ -36,7 +36,19 @@ namespace Tests
         {
             string[] arguments = new[] { "/m" }; // TODO: Initialize to an appropriate value
             Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
-            var task = TaskType.RunSQL;
+            var task = TaskType.MigrateDatabaseForward;
+            var actual = target.TaskType;
+
+            //make sure they are equal
+            Assert.AreEqual(task, actual, "The task type should match up");
+        }
+
+        [Test]
+        public void make_sure_it_finds_RunSqlFile_task()
+        {
+            string[] arguments = new[] { "/sql" }; 
+            Arguments target = new Arguments(arguments);
+            var task = TaskType.RunSqlFile;
             var actual = target.TaskType;
 
             //make sure they are equal

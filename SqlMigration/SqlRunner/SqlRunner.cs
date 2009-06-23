@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Data.Sql;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 
 
 namespace SqlMigration
@@ -21,7 +16,7 @@ namespace SqlMigration
         /// <param name="runInsideTransaction">Do you want the migrations to run inside a transaction so if
         /// an error occurs it will roll back?</param>
         /// <returns>0 for success, -1 for fail</returns>
-        int StartMigrations(IList<Migration> migrations, bool runInsideTransaction);
+        int StartMigrations(IList<Migration> migrations, bool runInsideTransaction, bool trackMigrations);
 
         string ConnectionString { get; set; }
     }
@@ -53,7 +48,7 @@ namespace SqlMigration
         }
 
 
-        public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction)
+        public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction, bool trackMigrations)
         {
             //setup command to be reused 
             IDbCommand command = null;
@@ -79,7 +74,9 @@ namespace SqlMigration
                     command.Transaction = _transaction;
 
                 //check to see which migration we should should run that have not been run yet
-                IList<string> migrationsThatHaveAlreadyBeenRun = SetupAndCheckWhatMigrationsShouldBeRun(command);
+                IList<string> migrationsThatHaveAlreadyBeenRun = trackMigrations 
+                    ? SetupAndCheckWhatMigrationsShouldBeRun(command)
+                    : new List<string>(1);
 
                 //loop on migrations
                 foreach (Migration migration in migrations.Where(m=> !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
@@ -94,9 +91,12 @@ namespace SqlMigration
                     }
 
                     //insert into table the name of the migration that was run
-                    command.CommandText = string.Format("INSERT INTO {0} VALUES ('{1}');", SQLMIGRATION_TABLE_NAME,
-                                                        migration.ToString());
-                    command.ExecuteNonQuery();
+                    if (trackMigrations)
+                    {
+                        command.CommandText = string.Format("INSERT INTO {0} VALUES ('{1}');", SQLMIGRATION_TABLE_NAME,
+                                                            migration.ToString());
+                        command.ExecuteNonQuery();
+                    }
                 }
 
                 //commit transaction if we are running under one

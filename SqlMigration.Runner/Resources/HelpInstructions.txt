@@ -1,5 +1,5 @@
 =====================Tasks=====================
-/m - Run the migrations in the script directory
+/m - Run the migrations in the script directory (/sd)
     that is passed in. They run inside a transaction,
     so they can be rolled back.  If you want to avoid
     running in a transaction, use the /nt flag.
@@ -12,6 +12,13 @@
     be put in after the /d flag.
     
     Ex. /d c:\my_db_changes.sql
+    
+/sql - Runs a single sql file against the database.
+    It expects the file name after /sql flag. You
+    can use the /nt flag to avoid wrapping the command
+    within a transaction.
+    
+    Ex. /sql create_database.sql
 
 
 =====================Flags=====================

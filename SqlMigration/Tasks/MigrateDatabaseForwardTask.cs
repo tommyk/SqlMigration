@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace SqlMigration
 {
-    public class RunSQLTask : MigrationTask
+    public class MigrateDatabaseForwardTask : MigrationTask
     {
         private readonly IFileIO _fileIO;
         private readonly ISqlRunner _sqlRunner;
 
         #region Constructors
-        public RunSQLTask(Arguments arguments)
+        public MigrateDatabaseForwardTask(Arguments arguments)
             : this(arguments, new FileIO(new FileIOWrapper()), new SqlRunner()) //use structure map on this
         {
         }
 
-        public RunSQLTask(Arguments args, IFileIO fileIO, ISqlRunner sqlRunner)
+        public MigrateDatabaseForwardTask(Arguments args, IFileIO fileIO, ISqlRunner sqlRunner)
             : base(args)
         {
             _fileIO = fileIO;
@@ -42,7 +42,7 @@ namespace SqlMigration
             bool runInsideTransaction = !base.Arguments.DoesArgumentExist("/nt");
 
             //run the migrations
-            int successRunningSql = _sqlRunner.StartMigrations(migartions, runInsideTransaction); 
+            int successRunningSql = _sqlRunner.StartMigrations(migartions, runInsideTransaction, true); 
             success = successRunningSql;
 
             return success;

@@ -23,8 +23,9 @@ namespace SqlMigration
             TaskTypeList = new List<KeyValuePair<TaskType, string>>();
 
             //add to the list
-            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.CreateDeploymentFolder, "/d"));
-            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.RunSQL, "/m"));
+            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.CreateDeploymentScript, "/d"));
+            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.MigrateDatabaseForward, "/m"));
+            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.RunSqlFile, "/sql"));
         }
 
 

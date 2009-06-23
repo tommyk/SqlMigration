@@ -62,14 +62,14 @@
     <Compile Include="FileIO\FileIO.cs" />
     <Compile Include="FileIO\FileIOWrapper.cs" />
     <Compile Include="Migration\DateParser.cs" />
-    <Compile Include="Migration\DatMigration.cs" />
     <Compile Include="Migration\Migration.cs" />
     <Compile Include="Migration\TSqlMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlRunner\SqlRunner.cs" />
     <Compile Include="Tasks\DeploymentTask.cs" />
     <Compile Include="Tasks\MigrationTask.cs" />
-    <Compile Include="Tasks\RunSQLTask.cs" />
+    <Compile Include="Tasks\MigrateDatabaseForwardTask.cs" />
+    <Compile Include="Tasks\RunSqlFileTask.cs" />
     <Compile Include="Tasks\TaskType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

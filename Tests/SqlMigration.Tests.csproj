@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="ArgumentsTest.cs" />
     <Compile Include="BaseTestClass.cs" />
-    <Compile Include="DatMigrationTest.cs" />
+    <Compile Include="RunSqlFileTaskTest.cs" />
     <Compile Include="DeploymentTaskTest.cs" />
     <Compile Include="FileIOTest.cs" />
     <Compile Include="FileIOWrapperTest.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="MigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Sql_Files.cs" />
-    <Compile Include="RunSQLTaskTest.cs" />
+    <Compile Include="MigrateDatabaseForwardTaskTest.cs" />
     <Compile Include="TSqlMigrationTest.cs" />
     <Compile Include="SqlRunnerTest.cs" />
   </ItemGroup>

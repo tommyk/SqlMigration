@@ -18,14 +18,18 @@ namespace SqlMigration.Runner
                 //setup a task and run it
                 MigrationTask task;
 
+                //todo: figure out how to make this more dynamic
                 //decide what task we want, and create it
                 switch (arguments.TaskType)
                 {
-                    case TaskType.CreateDeploymentFolder:
+                    case TaskType.CreateDeploymentScript:
                         task = new DeploymentTask(arguments);
                         break;
-                    case TaskType.RunSQL:
-                        task = new RunSQLTask(arguments);
+                    case TaskType.MigrateDatabaseForward:
+                        task = new MigrateDatabaseForwardTask(arguments);
+                        break;
+                    case TaskType.RunSqlFile:
+                        task = new RunSqlFileTask(arguments);
                         break;
                     default:
                         throw new ArgumentException("No tasktype found");
@@ -43,7 +47,7 @@ namespace SqlMigration.Runner
                     //todo: Log error possibly?
                     Console.WriteLine(ex.Message);
                     returnValue = -1;
-                } 
+                }
             }
             else
             {

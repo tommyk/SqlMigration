@@ -94,7 +94,7 @@ namespace Tests
             {
                 var sqlRunner = new SqlRunner(_iConnection, _iTransaction);
                 sqlRunner.ConnectionString = string.Empty;
-                sqlRunner.StartMigrations(migrations, true);
+                sqlRunner.StartMigrations(migrations, true, true);
             }
         }
 

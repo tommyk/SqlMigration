@@ -2,7 +2,8 @@
 {
     public enum TaskType
     {
-        CreateDeploymentFolder,
-        RunSQL
+        CreateDeploymentScript,
+        MigrateDatabaseForward,
+        RunSqlFile
     }
 }
