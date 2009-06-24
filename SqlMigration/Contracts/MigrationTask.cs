@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SqlMigration
+﻿namespace SqlMigration
 {
     public abstract class MigrationTask
     {
         private readonly Arguments _arguments;
+
+        protected MigrationTask(Arguments arguments)
+        {
+            _arguments = arguments;
+        }
+
 
         public Arguments Arguments
         {
             get { return _arguments; }
         }
 
-        public TaskType TaskType { get; set; }
-
-        protected MigrationTask(Arguments arguments)
-        {
-            _arguments = arguments;
-        }
+        public string TaskType { get; set; }
 
         public abstract int RunTask();
     }

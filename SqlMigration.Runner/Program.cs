@@ -13,41 +13,16 @@ namespace SqlMigration.Runner
 
             if (args.Length != 0)
             {
+                //setup IoC
+                IoC.Current.SetupWindsorContainer();
+
+                //create the arguments
                 Arguments arguments = new Arguments(args);
 
                 //setup a task and run it
-                MigrationTask task;
+                MigrationTask task = MigrationTaskFactory.GetMigrationTaskByTaskType(arguments);
 
-                //todo: figure out how to make this more dynamic
-                //decide what task we want, and create it
-                switch (arguments.TaskType)
-                {
-                    case TaskType.CreateDeploymentScript:
-                        task = new DeploymentTask(arguments);
-                        break;
-                    case TaskType.MigrateDatabaseForward:
-                        task = new MigrateDatabaseForwardTask(arguments);
-                        break;
-                    case TaskType.RunSqlFile:
-                        task = new RunSqlFileTask(arguments);
-                        break;
-                    default:
-                        throw new ArgumentException("No tasktype found");
-                }
-
-                //run the task
-                try
-                {
-                    //try to run the task
-                    returnValue = task.RunTask();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                    //todo: Log error possibly?
-                    Console.WriteLine(ex.Message);
-                    returnValue = -1;
-                }
+                returnValue = task.RunTask();
             }
             else
             {

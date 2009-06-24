@@ -4,7 +4,7 @@ using Rhino.Mocks;
 
 namespace Tests
 {
-    [TestFixture]
+    //[TestFixture]
     public class BaseTestClass
     {
         private MockRepository _mockRepository;

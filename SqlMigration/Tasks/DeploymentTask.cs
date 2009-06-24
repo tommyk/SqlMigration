@@ -12,13 +12,10 @@ namespace SqlMigration
 
 
         #region Constructors
-        public DeploymentTask(Arguments arguments)
-            : this(arguments, new FileIO(new FileIOWrapper())) //use structure map on this
-        {
-        }
+       
 
-        public DeploymentTask(Arguments args, IFileIO fileIO)
-            : base(args)
+        public DeploymentTask(Arguments arguments, IFileIO fileIO)
+            : base(arguments)
         {
             _fileIO = fileIO;
         }

@@ -38,13 +38,16 @@ namespace SqlMigration
             var migrations = new List<Migration>();
             foreach (string fileName in fileNames)
             {
-                //todo: make this not be hard coded for only sql files.  Do some magic and allow people to 
-                //overload and add their own style of migrations in the future
+
+                /* Lets use a factory that we can let users set a file extenstion to a type
+                 * so that its very extensivble. Follow the same thing as TaskTypeFactory and MigrationTaskFactory
+                 */
+                
                 //add migration
-                if (fileName.EndsWith(".sql"))
-                    migrations.Add(new TSqlMigration(fileName));
-                //else if (fileName.EndsWith(".dat"))
-                //    migrations.Add(new DatMigration(fileName));
+                Migration migration = MigrationFactory.GetMigrationByFileExtenstion(fileName);
+                if(migration != null)
+                    migrations.Add(migration);
+                
             }
 
             return migrations
@@ -66,7 +69,6 @@ namespace SqlMigration
         public string ReadFileContents(string filePath)
         {
             return File.ReadAllText(filePath);
-            //return _fileOperationsWrapper.ReadConentsOfFile(filePath);
         }
 
         public void WriteFile(string locationOfFile, string contents)

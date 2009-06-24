@@ -20,39 +20,15 @@ namespace Tests
         ///A test for TaskType
         ///</summary>
         [Test]
-        public void make_sure_it_finds_deployment_task()
+        public void make_sure_it_uses_the_first_command_as_the_TaskType()
         {
-            string[] arguments = new[] {"/d", "C:\\test"}; // TODO: Initialize to an appropriate value
-            Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
-            var task = TaskType.CreateDeploymentScript;
-            var actual = target.TaskType;
-            
-            //make sure they are equal
-            Assert.AreEqual(task, actual, "The task type should match up");
-        }
-
-        [Test]
-        public void make_sure_it_finds_migration_task()
-        {
-            string[] arguments = new[] { "/m" }; // TODO: Initialize to an appropriate value
-            Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
-            var task = TaskType.MigrateDatabaseForward;
-            var actual = target.TaskType;
-
-            //make sure they are equal
-            Assert.AreEqual(task, actual, "The task type should match up");
-        }
-
-        [Test]
-        public void make_sure_it_finds_RunSqlFile_task()
-        {
-            string[] arguments = new[] { "/sql" }; 
+            string command = "/sql";
+            string[] arguments = new[] { command, "/asdf" };
             Arguments target = new Arguments(arguments);
-            var task = TaskType.RunSqlFile;
             var actual = target.TaskType;
 
             //make sure they are equal
-            Assert.AreEqual(task, actual, "The task type should match up");
+            Assert.AreEqual(command, actual, "The task type should match up");
         }
 
 
@@ -60,7 +36,7 @@ namespace Tests
         public void find_argument_value()
         {
             string loc = @"C:\test";
-            string[] arguments = new[] { "/sd", loc, "asdf", "asdf"}; // TODO: Initialize to an appropriate value
+            string[] arguments = new[] { "/sd", loc, "asdf", "asdf" }; // TODO: Initialize to an appropriate value
             Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
 
             //try to get the value
@@ -77,11 +53,11 @@ namespace Tests
         [Test]
         public void DoesArgumentExist_yes_it_does()
         {
-            string[] arguments = new[]{"test", "asdf", "/nt"}; 
+            string[] arguments = new[] { "test", "asdf", "/nt" };
             Arguments target = new Arguments(arguments);
 
-            bool actual= target.DoesArgumentExist("/nt");
-            
+            bool actual = target.DoesArgumentExist("/nt");
+
             //make sure it does
             Assert.IsTrue(actual, "We should find that argument");
         }
@@ -98,7 +74,7 @@ namespace Tests
             string appLocation = Environment.CurrentDirectory;//Assembly.GetExecutingAssembly().CodeBase;
 
             Assert.AreEqual(appLocation, argumentValue, string.Format("they should both be '{0}", appLocation));
-            
+
         }
 
         /// <summary>
@@ -107,7 +83,7 @@ namespace Tests
         [Test]
         public void make_sure_we_dont_go_over_the_size_of_the_colletion_of_arguements()
         {
-            string[] arguments = new[]{"flag1"}; 
+            string[] arguments = new[] { "flag1" };
             Arguments target = new Arguments(arguments);
 
             string argumentValue = target.GetArgumentValue("flag1");

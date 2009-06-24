@@ -10,12 +10,6 @@ namespace SqlMigration
         private readonly IFileIO _fileIo;
         private readonly ISqlRunner _sqlRunner;
 
-        public RunSqlFileTask(Arguments arguments)
-            : this(arguments, new FileIO(new FileIOWrapper()), new SqlRunner())
-        {
-
-        }
-
         public RunSqlFileTask(Arguments arguments, IFileIO fileIo, ISqlRunner sqlRunner)
             : base(arguments)
         {

@@ -17,8 +17,15 @@ namespace Tests
     ///to contain all FileIOTest Unit Tests
     ///</summary>
     [TestFixture]
-    public class FileIOTest
+    public class FileIOTest : BaseTestClass
     {
+
+        [TestFixtureSetUp]
+        public void TestSetup()
+        {
+            IoC.Current.SetupWindsorContainer();
+        }
+
         /// <summary>
         ///A test for GetMigrationsInOrder
         ///</summary>
@@ -29,11 +36,11 @@ namespace Tests
             var fileWrapper = mock.DynamicMock<IFileIOWrapper>();
 
             //fake dates to test against
-            var firstDate = DateTime.Parse("1-1-2008 1:11:00Z");
-            var secondDate = DateTime.Parse("1-1-2008 1:12:00Z");
-            var thirdDate = DateTime.Parse("1-2-2008 1:11:00Z");
-            var fourthDate = DateTime.Parse("1-3-2008 1:11:00Z");
-            var fifthDate = DateTime.Parse("1-20-2008 1:11:00Z");
+            var firstDate = DateTime.Parse("1/1/2008 1:11:00");
+            var secondDate = DateTime.Parse("1/1/2008 1:12:00");
+            var thirdDate = DateTime.Parse("1/2/2008 1:11:00");
+            var fourthDate = DateTime.Parse("1/3/2008 1:11:00");
+            var fifthDate = DateTime.Parse("1/20/2008 1:11:00");
 
             //random order
             var dates = new List<DateTime> { firstDate, fourthDate, fifthDate, secondDate, thirdDate };
@@ -63,11 +70,18 @@ namespace Tests
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
                 Assert.AreEqual(dates.Count, migrationsInOrder.Count, "Should be equal in count");
-                Assert.AreEqual(firstDate, migrationsInOrder[0].MigrationDate, "date should come back in order");
-                Assert.AreEqual(secondDate, migrationsInOrder[1].MigrationDate, "date should come back in order");
-                Assert.AreEqual(thirdDate, migrationsInOrder[2].MigrationDate, "date should come back in order");
-                Assert.AreEqual(fourthDate, migrationsInOrder[3].MigrationDate, "date should come back in order");
-                Assert.AreEqual(fifthDate, migrationsInOrder[4].MigrationDate, "date should come back in order");
+
+                //make sure they are in order
+                Migration previousMigration = null;
+                for (int i = 0; i < migrationsInOrder.Count; i++)
+                {
+                    Migration migration = migrationsInOrder[i];
+                    if (i == 0)
+                        previousMigration = migration;
+
+                    //they should be greater then or equal to in datetime
+                    Assert.That(migration.MigrationDate, Is.GreaterThanOrEqualTo(previousMigration.MigrationDate));
+                }
             }
         }
 
@@ -78,11 +92,11 @@ namespace Tests
             var fileWrapper = mock.DynamicMock<IFileIOWrapper>();
 
             //fake dates to test against
-            var firstDate = DateTime.Parse("1-1-2008 1:11:00Z");
-            var secondDate = DateTime.Parse("1-1-2008 1:12:00Z");
-            var thirdDate = DateTime.Parse("1-2-2008 1:11:00Z");
-            var fourthDate = DateTime.Parse("1-3-2008 1:11:00Z");
-            var fifthDate = DateTime.Parse("1-20-2008 1:11:00Z");
+            var firstDate = DateTime.Parse("1/1/2008 1:11:00");
+            var secondDate = DateTime.Parse("1/1/2008 1:12:00");
+            var thirdDate = DateTime.Parse("1/2/2008 1:11:00");
+            var fourthDate = DateTime.Parse("1/3/2008 1:11:00");
+            var fifthDate = DateTime.Parse("1/20/2008 1:11:00");
 
             //random order
             var dates = new List<DateTime> { firstDate, fourthDate, fifthDate, secondDate, thirdDate };
@@ -122,7 +136,7 @@ namespace Tests
         [Test]
         public void ReadAndWriteFile()
         {
-            string currentLocation = AppDomain.CurrentDomain.BaseDirectory; //Assembly.GetExecutingAssembly().Location;
+            string currentLocation = AppDomain.CurrentDomain.BaseDirectory; 
             string fileLocationWithName = currentLocation + "\\test.txt";
 
             //attempt to write out a file called test.txt

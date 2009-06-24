@@ -12,10 +12,10 @@ namespace SqlMigration
         private const string SQLMIGRATION_TABLE_NAME = "SqlMigration";
         private readonly IDbConnection _connection;
 
-        public SqlRunner()
-            : this(null)
-        {
-        }
+        //public SqlRunner()
+        //    : this(null)
+        //{
+        //}
 
         public SqlRunner(IDbConnection connection)
         {

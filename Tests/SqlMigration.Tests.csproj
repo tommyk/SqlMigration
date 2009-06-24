@@ -63,6 +63,9 @@
   <ItemGroup>
     <Compile Include="ArgumentsTest.cs" />
     <Compile Include="BaseTestClass.cs" />
+    <Compile Include="MigrationFactoryTest.cs" />
+    <Compile Include="TaskTypeFactoryTest.cs" />
+    <Compile Include="MigrationTaskFactoryTest.cs" />
     <Compile Include="RunSqlFileTaskTest.cs" />
     <Compile Include="DeploymentTaskTest.cs" />
     <Compile Include="FileIOTest.cs" />

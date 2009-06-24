@@ -15,18 +15,18 @@ namespace SqlMigration
     public class Arguments
     {
         private readonly string[] _arguments;
-        private static readonly List<KeyValuePair<TaskType, string>> TaskTypeList;
+        //private static readonly List<KeyValuePair<TaskType, string>> TaskTypeList;
 
         #region Constructors
-        static Arguments()
-        {
-            TaskTypeList = new List<KeyValuePair<TaskType, string>>();
+        //static Arguments()
+        //{
+        //    TaskTypeList = new List<KeyValuePair<TaskType, string>>();
 
-            //add to the list
-            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.CreateDeploymentScript, "/d"));
-            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.MigrateDatabaseForward, "/m"));
-            TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.RunSqlFile, "/sql"));
-        }
+        //    //add to the list
+        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.CreateDeploymentScript, "/d"));
+        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.MigrateDatabaseForward, "/m"));
+        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.RunSqlFile, "/sql"));
+        //}
 
 
         public Arguments(string[] arguments)
@@ -44,20 +44,30 @@ namespace SqlMigration
             get { return _arguments; }
         }
 
-        private TaskType? _taskType;
-        public TaskType TaskType
+        public string TaskType
         {
             get
             {
-                if (!_taskType.HasValue)
-                {
-                    KeyValuePair<TaskType, string> valuePair = TaskTypeList.Find(pair => pair.Value == _arguments[0]);
-                    _taskType = valuePair.Key;
-                }
-
-                return _taskType.Value;
+                return _arguments[0];
             }
         }
+
+        //private TaskType? _taskType;
+        //public TaskType TaskType
+        //{
+        //    get
+        //    {
+        //        if (!_taskType.HasValue)
+        //        {
+        //            KeyValuePair<TaskType, string> valuePair = TaskTypeList.Find(pair => pair.Value == _arguments[0]);
+        //            _taskType = valuePair.Key;
+        //        }
+
+        //        return _taskType.Value;
+        //    }
+        //}
+
+
 
 
 

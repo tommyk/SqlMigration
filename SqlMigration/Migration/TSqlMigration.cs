@@ -7,10 +7,10 @@ namespace SqlMigration
     {
         private readonly IFileIO _fileIO;
 
-        public TSqlMigration(string filePath)
-            : this(filePath, new FileIO(new FileIOWrapper())) //todo: use DI to get rid of this!
-        {
-        }
+        //public TSqlMigration(string filePath)
+        //    : this(filePath, new FileIO(new FileIOWrapper())) //todo: use DI to get rid of this!
+        //{
+        //}
 
         public TSqlMigration(string filePath, IFileIO fileIO)
             : base(filePath)

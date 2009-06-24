@@ -9,13 +9,9 @@ namespace SqlMigration
         private readonly ISqlRunner _sqlRunner;
 
         #region Constructors
-        public MigrateDatabaseForwardTask(Arguments arguments)
-            : this(arguments, new FileIO(new FileIOWrapper()), new SqlRunner()) //use structure map on this
-        {
-        }
 
-        public MigrateDatabaseForwardTask(Arguments args, IFileIO fileIO, ISqlRunner sqlRunner)
-            : base(args)
+        public MigrateDatabaseForwardTask(Arguments arguments, IFileIO fileIO, ISqlRunner sqlRunner)
+            : base(arguments)
         {
             _fileIO = fileIO;
             _sqlRunner = sqlRunner;
