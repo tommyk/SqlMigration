@@ -14,9 +14,9 @@ namespace SqlMigration
         private static readonly Dictionary<string, Type> _taskWithImplementationTypes =
             new Dictionary<string, Type>(3)
                 {
-                    {"/sql", typeof(RunSqlFileTask)},
-                    {"/d", typeof(DeploymentTask)},
-                    {"/m", typeof(MigrateDatabaseForwardTask)},
+                    {TaskTypeConstants.RunSqlFileTask, typeof(RunSqlFileTask)},
+                    {TaskTypeConstants.DeploymentTask, typeof(DeploymentTask)},
+                    {TaskTypeConstants.MigrateDatabaseForwardTask, typeof(MigrateDatabaseForwardTask)},
                 };
 
         public static void Add(string taskCommand, Type implementationType)

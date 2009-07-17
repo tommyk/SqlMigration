@@ -22,7 +22,7 @@ namespace Tests
         [Test]
         public void make_sure_it_uses_the_first_command_as_the_TaskType()
         {
-            string command = "/sql";
+            string command = TaskTypeConstants.RunSqlFileTask;
             string[] arguments = new[] { command, "/asdf" };
             Arguments target = new Arguments(arguments);
             var actual = target.TaskType;
@@ -36,11 +36,11 @@ namespace Tests
         public void find_argument_value()
         {
             string loc = @"C:\test";
-            string[] arguments = new[] { "/sd", loc, "asdf", "asdf" }; // TODO: Initialize to an appropriate value
+            string[] arguments = new[] { ArgumentConstants.ScriptDirectoryArg, loc, "asdf", "asdf" }; // TODO: Initialize to an appropriate value
             Arguments target = new Arguments(arguments); // TODO: Initialize to an appropriate value
 
             //try to get the value
-            string argumentValue = target.GetArgumentValue("/sd");
+            string argumentValue = target.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
 
             //make sure they are equal
             Assert.IsNotNull(argumentValue, "arg value came back null");
@@ -53,10 +53,10 @@ namespace Tests
         [Test]
         public void DoesArgumentExist_yes_it_does()
         {
-            string[] arguments = new[] { "test", "asdf", "/nt" };
+            string[] arguments = new[] { "test", "asdf", ArgumentConstants.RunWithoutTransactionArg };
             Arguments target = new Arguments(arguments);
 
-            bool actual = target.DoesArgumentExist("/nt");
+            bool actual = target.DoesArgumentExist(ArgumentConstants.RunWithoutTransactionArg);
 
             //make sure it does
             Assert.IsTrue(actual, "We should find that argument");
@@ -65,10 +65,10 @@ namespace Tests
         [Test]
         public void no_scriptDirectory_passed_in_so_we_default_to_working_directory()
         {
-            string[] arguments = new[] { "test", "asdf", "/nt" };
+            string[] arguments = new[] { "test", "asdf", ArgumentConstants.RunWithoutTransactionArg };
             Arguments target = new Arguments(arguments);
 
-            string argumentValue = target.GetArgumentValue("/sd");
+            string argumentValue = target.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
 
             //make sure its the applications working directory
             string appLocation = Environment.CurrentDirectory;//Assembly.GetExecutingAssembly().CodeBase;

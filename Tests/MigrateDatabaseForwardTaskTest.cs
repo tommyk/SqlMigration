@@ -30,7 +30,7 @@ namespace Tests
             //connection string
             var connectionString = "asdfasdf";
             //make arguments file
-            var args = new Arguments(new string[] {"/cs", connectionString, "/nt"});
+            var args = new Arguments(new string[] {ArgumentConstants.ConnectionStringArg, connectionString, ArgumentConstants.RunWithoutTransactionArg});
 
 
 

@@ -30,13 +30,13 @@ namespace SqlMigration
             
 
             IList<Migration> migrations;
-            string locationOfScripts = base.Arguments.GetArgumentValue("/sd");
+            string locationOfScripts = base.Arguments.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
 
             //parse for flag that says to include them
-            bool includeTestData = base.Arguments.DoesArgumentExist("/t");
+            bool includeTestData = base.Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
 
             //try to see if they want to filter the date
-            string filterDateArg = Arguments.GetArgumentValue("/date");
+            string filterDateArg = Arguments.GetArgumentValue(ArgumentConstants.DateArg);
             if (!string.IsNullOrEmpty(filterDateArg))
             {
                 //filter it.. bool successParsing = false;
@@ -77,39 +77,10 @@ namespace SqlMigration
             }
 
             //write file out
-            string locationToCreateScript = base.Arguments.GetArgumentValue("/d");
+            string locationToCreateScript = base.Arguments.GetArgumentValue(TaskTypeConstants.DeploymentTask);
             _fileIO.WriteFile(locationToCreateScript, sb.ToString());
 
             return 0;
-
-
-            ///// Create location folder, and delete it if its there
-            //string locationToCopyTo = base.Arguments.GetArgumentValue("/cd");
-            //bool folderCreationSuccess = _fileIO.CreateFolder(locationToCopyTo);
-            ////todo: do something better if we failed
-            //if (!folderCreationSuccess)
-            //    throw new Exception("Could not create the specified folder");
-
-
-            ////start copying them
-            //foreach (Migration migration in migrations)
-            //{
-            //    bool copySuccess = _fileIO.CopyFile(migration.FilePath, locationToCopyTo);
-            //    //todo: if it returns false do something
-            //    if (!copySuccess) 
-            //        throw new Exception("Error copying file to location");
-            //}
-
-            ////copy the tool
-            //string exeLocation = Assembly.GetExecutingAssembly().Location;
-            //bool copyFile = _fileIO.CopyFile(exeLocation, locationToCopyTo);
-            //if (!copyFile) 
-            //    throw new Exception("Error copying Migrator Tool");
-
-
-            ////todo: figure how create batch....
-
-            //return 0;
         }
     }
 }

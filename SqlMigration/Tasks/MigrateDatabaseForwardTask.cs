@@ -24,18 +24,18 @@ namespace SqlMigration
             int success = -1;
             
             //grab migrations
-            string scriptDirectory = Arguments.GetArgumentValue("/sd");
+            string scriptDirectory = Arguments.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
             //make it look for a flag to include test data
-            bool includeTestData = Arguments.DoesArgumentExist("/t");
+            bool includeTestData = Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
             IList<Migration> migartions = _fileIO.GetMigrationsInOrder(scriptDirectory, includeTestData); 
             
 
             //grab connection string
-            string connectionString = base.Arguments.GetArgumentValue("/cs");
+            string connectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);
             _sqlRunner.ConnectionString = connectionString;
 
             //find if we want to run inside transaction...
-            bool runInsideTransaction = !base.Arguments.DoesArgumentExist("/nt");
+            bool runInsideTransaction = !base.Arguments.DoesArgumentExist(ArgumentConstants.RunWithoutTransactionArg);
 
             //run the migrations
             int successRunningSql = _sqlRunner.StartMigrations(migartions, runInsideTransaction, true); 

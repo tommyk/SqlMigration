@@ -28,9 +28,9 @@ namespace Tests
         [Test]
         public void make_sure_a_TaskType_will_always_return_an_object()
         {
-            RunTestCode("/sql");
-            RunTestCode("/m");
-            RunTestCode("/d");
+            RunTestCode(TaskTypeConstants.RunSqlFileTask);
+            RunTestCode(TaskTypeConstants.MigrateDatabaseForwardTask);
+            RunTestCode(TaskTypeConstants.DeploymentTask);
         }
 
         private void RunTestCode(string commandTask)

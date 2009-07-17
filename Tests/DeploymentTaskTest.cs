@@ -72,7 +72,7 @@ GO
             using (Mock.Playback())
             {
                 //act like we are pulling and pushing from a:\test, just easier to test against one location
-                var args = new Arguments(new[] { "/d", locationToDeploy, "/sd", scriptDirectory, "/t" });
+                var args = new Arguments(new[] { TaskTypeConstants.DeploymentTask, locationToDeploy, ArgumentConstants.ScriptDirectoryArg, scriptDirectory, ArgumentConstants.IncludeTestScriptsArg });
                 var deploymentTask = new DeploymentTask(args, iFileIO);
 
                 //try to run task

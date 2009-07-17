@@ -31,7 +31,7 @@ namespace Tests
             string sqlFileContents = "create table asdf()";
 
 
-            var args = new Arguments(new string[] {"/sql", filePath, "/nt", "/cs", connectionString});
+            var args = new Arguments(new string[] {TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.RunWithoutTransactionArg, ArgumentConstants.ConnectionStringArg, connectionString});
 
             using (mock.Record())
             {

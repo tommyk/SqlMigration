@@ -71,6 +71,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="FileIO\FileIO.cs" />
     <Compile Include="FileIO\FileIOWrapper.cs" />
     <Compile Include="Contracts\IFileIO.cs" />

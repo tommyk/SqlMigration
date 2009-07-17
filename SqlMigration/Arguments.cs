@@ -18,16 +18,6 @@ namespace SqlMigration
         //private static readonly List<KeyValuePair<TaskType, string>> TaskTypeList;
 
         #region Constructors
-        //static Arguments()
-        //{
-        //    TaskTypeList = new List<KeyValuePair<TaskType, string>>();
-
-        //    //add to the list
-        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.CreateDeploymentScript, "/d"));
-        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.MigrateDatabaseForward, "/m"));
-        //    TaskTypeList.Add(new KeyValuePair<TaskType, string>(TaskType.RunSqlFile, "/sql"));
-        //}
-
 
         public Arguments(string[] arguments)
         {
@@ -37,7 +27,6 @@ namespace SqlMigration
             _arguments = arguments;
         }
         #endregion
-
 
         public string[] CommandArguments
         {
@@ -51,24 +40,6 @@ namespace SqlMigration
                 return _arguments[0];
             }
         }
-
-        //private TaskType? _taskType;
-        //public TaskType TaskType
-        //{
-        //    get
-        //    {
-        //        if (!_taskType.HasValue)
-        //        {
-        //            KeyValuePair<TaskType, string> valuePair = TaskTypeList.Find(pair => pair.Value == _arguments[0]);
-        //            _taskType = valuePair.Key;
-        //        }
-
-        //        return _taskType.Value;
-        //    }
-        //}
-
-
-
 
 
         /// <summary>
@@ -116,7 +87,7 @@ namespace SqlMigration
 
             switch (flagToFind)
             {
-                case "/sd":
+                case ArgumentConstants.ScriptDirectoryArg:
                     argValue = Environment.CurrentDirectory;
                     break;
                 default:
