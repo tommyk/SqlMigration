@@ -11,7 +11,7 @@
     in the location of the file you want the changes to
     be put in after the /d flag.
     
-    Ex. /d c:\my_db_changes.sql
+    Ex. /d c:\my_db_changes.sql /sd <locationOfScripts>
     
 /sql - Runs a single sql file against the database.
     It expects the file name after /sql flag. You
@@ -30,9 +30,4 @@
     
 /t - Include test data.
 
-/date - The date and time you want the migrations to 
-    start. This is only processed on the /d task. 
-    It is in the format of
-    '2008-04-20_16h20m'. That is 4/20/2008 at 4:20PM.
-    
 /cs - The connection string to use

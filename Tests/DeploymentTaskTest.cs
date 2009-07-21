@@ -40,23 +40,35 @@ namespace Tests
             string locationToDeploy = @"a:\test";
 
             //fake dates to test against
-            var firstDate = DateTime.Parse("1-1-2008 1:11:00Z");
-            var secondDate = DateTime.Parse("1-1-2008 1:12:00Z");
+            var firstDate = DateTime.Parse("1-1-2008 1:11:00");
+            var secondDate = DateTime.Parse("1-1-2008 1:12:00");
 
             //create fake list to pass back
             var migrations = new List<Migration>();
             migrations.Add(FileIOTest.CreateMigrationObject(secondDate));
             migrations.Add(FileIOTest.CreateMigrationObject(firstDate));
 
-            string fileContents = @"command1
-GO
-command2
-GO
-command1
-GO
-command2
-GO
-";
+            string fileContents =
+@"BEGIN TRY
+BEGIN TRANSACTION SqlMigrationTransaction
+IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h11m-test.sql') = 0
+BEGIN
+exec ('command1')
+exec ('command2')
+INSERT INTO SqlMigration VALUES ('2008-01-01_01h11m-test.sql')
+END
+IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h12m-test.sql') = 0
+BEGIN
+exec ('command1')
+exec ('command2')
+INSERT INTO SqlMigration VALUES ('2008-01-01_01h12m-test.sql')
+END
+COMMIT TRANSACTION SqlMigrationTransaction
+END TRY
+BEGIN CATCH
+SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage;
+ROLLBACK TRANSACTION SqlMigrationTransaction
+END CATCH";
 
 
             using (Mock.Record())
