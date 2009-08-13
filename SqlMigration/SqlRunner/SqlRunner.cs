@@ -62,11 +62,12 @@ namespace SqlMigration
                 //loop on migrations
                 foreach (Migration migration in migrations.Where(m=> !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
                 {
+                    //todo:replace with logger implemetation
+                    Console.WriteLine(string.Format("Running migration : {0}", migration.ToString()));
+                    
                     //run each sql command by itself
                     foreach (string sqlCommand in migration.GetSqlCommands())
                     {
-                        //todo:replace with logger implemetation
-                        Console.WriteLine(string.Format("Running command = '{0}'", sqlCommand));
                         command.CommandText = sqlCommand;
                         command.ExecuteNonQuery();
                     }
