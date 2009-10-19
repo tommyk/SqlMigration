@@ -63,6 +63,8 @@ namespace SqlMigration
                     //add the command to the string builder
                     sb.AppendLine("exec ('" + sqlCommand.Replace("'", "''") + "')");
                 }
+                //add debug statement
+                sb.AppendLine(string.Format("PRINT 'Done running migration {0}'", migration));
 
                 //insert the migratin name
                 sb.AppendLine(string.Format("INSERT INTO SqlMigration VALUES ('{0}')", migration));

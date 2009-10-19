@@ -55,12 +55,14 @@ IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h11m-test.sq
 BEGIN
 exec ('command1')
 exec ('command2')
+PRINT 'Done running migration 2008-01-01_01h11m-test.sql'
 INSERT INTO SqlMigration VALUES ('2008-01-01_01h11m-test.sql')
 END
 IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h12m-test.sql') = 0
 BEGIN
 exec ('command1')
 exec ('command2')
+PRINT 'Done running migration 2008-01-01_01h12m-test.sql'
 INSERT INTO SqlMigration VALUES ('2008-01-01_01h12m-test.sql')
 END
 COMMIT TRANSACTION SqlMigrationTransaction
