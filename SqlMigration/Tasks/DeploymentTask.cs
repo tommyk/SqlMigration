@@ -44,6 +44,8 @@ namespace SqlMigration
             //begin try and transaction 
             sb.AppendLine("BEGIN TRY");
             sb.AppendLine("BEGIN TRANSACTION SqlMigrationTransaction");
+            sb.AppendLine("DECLARE @debug varchar(max);");
+            sb.AppendLine("set @debug = 'Starting Migrations' + CHAR(13);");
 
             foreach (Migration migration in migrations.OrderBy(migration => migration.MigrationDate))
             {
@@ -51,9 +53,9 @@ namespace SqlMigration
                 Console.WriteLine(string.Format("Writing out migration {0}", migration));
 
                 //see if we need to run this migration
-                sb.AppendLine(string.Format("IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '{0}') = 0",
-                                            migration));
+                sb.AppendLine(string.Format("IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '{0}') = 0", migration));
                 sb.AppendLine("BEGIN");
+                sb.AppendLine("set @debug = @debug + CHAR(13) + 'Starting " + migration + "'");
 
                 var sqlCommands = migration.GetSqlCommands();
 
@@ -64,7 +66,7 @@ namespace SqlMigration
                     sb.AppendLine("exec ('" + sqlCommand.Replace("'", "''") + "')");
                 }
                 //add debug statement
-                sb.AppendLine(string.Format("PRINT 'Done running migration {0}'", migration));
+                sb.AppendLine("set @debug = @debug + CHAR(13) + 'Ending " + migration + "'");
 
                 //insert the migratin name
                 sb.AppendLine(string.Format("INSERT INTO SqlMigration VALUES ('{0}')", migration));
@@ -72,9 +74,10 @@ namespace SqlMigration
             }
             //attempt to commit the transaction at the end of the script
             sb.AppendLine("COMMIT TRANSACTION SqlMigrationTransaction");
+            sb.AppendLine("SELECT @debug as Tracing");
             sb.AppendLine("END TRY");
             sb.AppendLine("BEGIN CATCH");
-            sb.AppendLine("SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage;");
+            sb.AppendLine("SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;");
             sb.AppendLine("ROLLBACK TRANSACTION SqlMigrationTransaction");
             sb.Append("END CATCH");
 

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 using SqlMigration;
 
 
@@ -21,34 +22,38 @@ namespace Tests
         [Test]
         public void run_task_wihtout_running_inside_transaction()
         {
-            var mock = new Rhino.Mocks.MockRepository();
-            var fileIO = mock.DynamicMock<IFileIO>();
-            var sqlRunner = mock.DynamicMock<ISqlRunner>();
-
-            //connection string
             var connectionString = "asdfasdf";
             string filePath = @"A:\test.sql";
             string sqlFileContents = "create table asdf()";
+            var fileIO = MockRepository.GenerateMock<IFileIO>();
+            var dbConnection = MockRepository.GenerateMock<IDbConnection>();
+            var transaction = MockRepository.GenerateMock<IDbTransaction>();
+            var command = MockRepository.GenerateMock<IDbCommand>();
+            
+            
+            var args = new Arguments(new[] {TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.ConnectionStringArg, connectionString});
+
+            //Arrange
+
+            //get file contents...
+            fileIO.Stub(io => io.ReadFileContents(filePath)).Return(sqlFileContents);
+
+            //transaction
+            dbConnection.Stub(connection => connection.BeginTransaction()).Return(transaction);
+
+            //create command
+            dbConnection.Stub(connection => connection.CreateCommand()).Return(command);
 
 
-            var args = new Arguments(new string[] {TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.RunWithoutTransactionArg, ArgumentConstants.ConnectionStringArg, connectionString});
+            //Act
+            var runSqlFileTask = new RunSqlFileTask(args, fileIO, dbConnection);
+            int success = runSqlFileTask.RunTask();
 
-            using (mock.Record())
-            {
-                //expect call to sql runner and return 0 for success
-                Expect.Call(sqlRunner.StartMigrations(null, false, true))
-                    .IgnoreArguments()
-                    .Constraints(Property.Value("Count", 1), Is.Equal(false), Is.Equal(false))
-                    .Return(0);
-            }
-            using (mock.Playback())
-            {
-                var runSqlTask = new RunSqlFileTask(args, fileIO, sqlRunner);
-                int success = runSqlTask.RunTask();
-
-                Assert.AreEqual(0, success, "we should get 0 reuslting in a success");
-            }
-
+            //Assert
+            command.AssertWasCalled(dbCommand => dbCommand.ExecuteNonQuery());
+            transaction.AssertWasCalled(dbTransaction => dbTransaction.Commit());
+            dbConnection.AssertWasCalled(connection => connection.ConnectionString = connectionString);
+            Assert.That(success, Is.EqualTo(0));
         }
     }
 }

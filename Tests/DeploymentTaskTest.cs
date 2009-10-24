@@ -51,24 +51,29 @@ namespace Tests
             string fileContents =
 @"BEGIN TRY
 BEGIN TRANSACTION SqlMigrationTransaction
+DECLARE @debug varchar(max);
+set @debug = 'Starting Migrations' + CHAR(13);
 IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h11m-test.sql') = 0
 BEGIN
+set @debug = @debug + CHAR(13) + 'Starting 2008-01-01_01h11m-test.sql'
 exec ('command1')
 exec ('command2')
-PRINT 'Done running migration 2008-01-01_01h11m-test.sql'
+set @debug = @debug + CHAR(13) + 'Ending 2008-01-01_01h11m-test.sql'
 INSERT INTO SqlMigration VALUES ('2008-01-01_01h11m-test.sql')
 END
 IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h12m-test.sql') = 0
 BEGIN
+set @debug = @debug + CHAR(13) + 'Starting 2008-01-01_01h12m-test.sql'
 exec ('command1')
 exec ('command2')
-PRINT 'Done running migration 2008-01-01_01h12m-test.sql'
+set @debug = @debug + CHAR(13) + 'Ending 2008-01-01_01h12m-test.sql'
 INSERT INTO SqlMigration VALUES ('2008-01-01_01h12m-test.sql')
 END
 COMMIT TRANSACTION SqlMigrationTransaction
+SELECT @debug as Tracing
 END TRY
 BEGIN CATCH
-SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage;
+SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;
 ROLLBACK TRANSACTION SqlMigrationTransaction
 END CATCH";
 

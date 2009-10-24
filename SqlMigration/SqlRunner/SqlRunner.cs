@@ -12,21 +12,16 @@ namespace SqlMigration
         private const string SQLMIGRATION_TABLE_NAME = "SqlMigration";
         private readonly IDbConnection _connection;
 
-        //public SqlRunner()
-        //    : this(null)
-        //{
-        //}
-
         public SqlRunner(IDbConnection connection)
         {
-            if(connection == null) throw new ArgumentNullException("Connection must not be null");
+            if (connection == null) throw new ArgumentNullException("Connection must not be null");
             _connection = connection;
         }
 
         public string ConnectionString
         {
             get { return _connection.ConnectionString; }
-            set { _connection.ConnectionString= value; }
+            set { _connection.ConnectionString = value; }
         }
 
 
@@ -55,21 +50,23 @@ namespace SqlMigration
                     command.Transaction = transaction;
 
                 //check to see which migration we should should run that have not been run yet
-                IList<string> migrationsThatHaveAlreadyBeenRun = trackMigrations 
+                IList<string> migrationsThatHaveAlreadyBeenRun = trackMigrations
                     ? SetupAndCheckWhatMigrationsShouldBeRun(command)
                     : new List<string>(1);
 
                 //loop on migrations
-                foreach (Migration migration in migrations.Where(m=> !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
+                foreach (Migration migration in migrations.Where(m => !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
                 {
                     //todo:replace with logger implemetation
                     Console.WriteLine(string.Format("Running migration : {0}", migration.ToString()));
-                    
+
                     //run each sql command by itself
                     foreach (string sqlCommand in migration.GetSqlCommands())
                     {
+                        Console.WriteLine("Starting to run sql");
                         command.CommandText = sqlCommand;
                         command.ExecuteNonQuery();
+                        Console.WriteLine("Ending running sql");
                     }
 
                     //insert into table the name of the migration that was run
@@ -83,7 +80,11 @@ namespace SqlMigration
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
+                {
+                    Console.WriteLine("Before Commit");
                     transaction.Commit();
+                    Console.WriteLine("After Commit");
+                }
 
                 //mark success
                 success = 0;
@@ -93,25 +94,41 @@ namespace SqlMigration
                 try
                 {
                     if (transaction != null)
+                    {
+                        Console.WriteLine("Error, trying to rollback");
                         transaction.Rollback();
+                        Console.WriteLine("rollback complete");
+                    }
                 }
                 catch (SqlException ex)
                 {
-                    if (transaction.Connection != null)
-                        Console.WriteLine("Exception" + ex.GetType() + " encountered while rolling back transaction.");
+                    Console.WriteLine("Exception" + ex.GetType() + " encountered while rolling back transaction.");
+                    Console.WriteLine(string.Format("Exception Message: {0}", ex.Message));
                 }
                 Console.WriteLine("Exception " + e.GetType() + " encountered while running sql files.");
-                Console.WriteLine(e.Message);
+                WriteOutAllExcpetionInformation(e);
             }
             finally
             {
                 if (_connection != null)
                 {
+                    Console.WriteLine("Closing connection...");
                     _connection.Close();
+                    Console.WriteLine("Done closing connection");
                 }
             }
 
             return success;
+        }
+
+        private static void WriteOutAllExcpetionInformation(Exception e)
+        {
+            if(e != null)
+            {
+                Console.WriteLine(e.Message);
+                if (e.InnerException != null) 
+                    WriteOutAllExcpetionInformation(e.InnerException);
+            }
         }
 
         private IList<string> SetupAndCheckWhatMigrationsShouldBeRun(IDbCommand command)
