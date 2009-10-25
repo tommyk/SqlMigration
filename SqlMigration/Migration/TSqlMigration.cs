@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SqlMigration
 {
@@ -37,63 +38,48 @@ namespace SqlMigration
 
 
             //just a simple string to keep the command until the next GO statement
-            string oneCommand = string.Empty;
+            //string oneCommand = string.Empty;
+            StringBuilder oneCommand = new StringBuilder();
+
             //loop over each line
-            string[] strings = fileContents.Split(new[]{"\r\n"}, StringSplitOptions.None);
+            string[] strings = fileContents.Split(new[] { "\r\n" }, StringSplitOptions.None);
             for (int i = 0; i < strings.Length; i++)
             {
+                if (oneCommand == null)
+                    oneCommand = new StringBuilder();
+
                 //get the current line
                 string line = strings[i];
 
                 //does it contain any go statements in the line?
                 if (line.Equals("go", StringComparison.OrdinalIgnoreCase)/*it does*/)
                 {
-                    //add it too the commands if its not blank
-                    if(oneCommand != string.Empty)
-                        commands.Add(oneCommand);
-                    //reset the running command
-                    oneCommand = string.Empty;
+                    ////add it too the commands if its not blank
+                    if (oneCommand.Length != 0)
+                        commands.Add(oneCommand.ToString());
+                    oneCommand = null;
+
                 }
                 else
                 {
                     //just add it and keep going line by line
                     if (line != string.Empty)
                     {
-                        //make sure its not blank before adding a line break
-                        if (oneCommand != string.Empty)
-                            oneCommand += "\r\n";
-
-                        //add command
-                        oneCommand += line;
+                        ////make sure its not blank before adding a line break
+                        oneCommand.AppendLine(line);
                     }
                 }
 
             }
 
             //incase there was no GO statement we need to add the command that was running through
-            if(oneCommand != string.Empty)
-                commands.Add(oneCommand);
+            if (oneCommand != null)
+                if (oneCommand.Length != 0)
+                    commands.Add(oneCommand.ToString());
 
 
             return commands;
         }
-
-/*
-        private string RemoveGoStatement(string line)
-        {
-            //line = line.Replace("GO\r\n", string.Empty);
-            //line = line.Replace("\r\nGO", string.Empty);
-            //line = line.Replace("go\r\n", string.Empty);
-            //line = line.Replace("\r\ngo", string.Empty);
-
-            return line.Replace("GO\r\n", string.Empty)
-                .Replace("\r\nGO", string.Empty)
-                .Replace("go\r\n", string.Empty)
-                .Replace("\r\ngo", string.Empty)
-                .Replace("GO", string.Empty)
-                .Replace("go", string.Empty);
-        }
-*/
 
         private string GetFileContents()
         {

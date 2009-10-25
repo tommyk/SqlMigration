@@ -119,9 +119,9 @@ GO";
                 //there should be 3 commands inside this fake sql file
                 Assert.That(sqlCommand.Count, Is.EqualTo(4));
 
-                Assert.That(sqlCommand[0], Is.EqualTo("test contents category"));
-                Assert.That(sqlCommand[1], Is.EqualTo("Test"));
-                Assert.That(sqlCommand[2], Is.EqualTo("TEST"));
+                Assert.That(sqlCommand[0], Is.EqualTo("test contents category\r\n"));
+                Assert.That(sqlCommand[1], Is.EqualTo("Test\r\n"));
+                Assert.That(sqlCommand[2], Is.EqualTo("TEST\r\n"));
                 //make sure it did not clump each line into one big string
                 Assert.That(sqlCommand[3], Is.Not.EqualTo("testmultiplelines"));
             }
@@ -149,10 +149,8 @@ TEST";
                 //there should be 3 commands inside this fake sql file
                 Assert.That(sqlCommand.Count, Is.EqualTo(1));
 
-                Assert.That(sqlCommand[0], Is.EqualTo(fileContents));
+                Assert.That(sqlCommand[0], Is.EqualTo(fileContents + "\r\n"));
             }
         }
     }
-
-
 }
