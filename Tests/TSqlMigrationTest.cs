@@ -34,7 +34,7 @@ namespace Tests
         public void make_sure_we_attempt_to_read_the_contents_of_the_sql_file()
         {
             string filePath = "C:\\test";
-            string fileContents = "test contents";
+            string fileContents = "test contents\r\n";
 
 
             using (Mock.Record())
@@ -46,9 +46,9 @@ namespace Tests
             using (Mock.Playback())
             {
                 var sqlMigration = new TSqlMigration(filePath, _fileIo);
-                string sqlCommand = sqlMigration.GetSqlCommand();
+                var sqlCommand = sqlMigration.GetSqlCommands();
 
-                Assert.AreEqual(fileContents, sqlCommand, "This should be the same contents");
+                Assert.AreEqual(fileContents, sqlCommand[0], "This should be the same contents");
             }
         }
 
@@ -66,10 +66,6 @@ Test
 GO
 TEST
 GO";
-            string expectedResults = @"test contents category
-Test
-TEST";
-
             using (Mock.Record())
             {
                 //try to read the file
@@ -79,9 +75,11 @@ TEST";
             using (Mock.Playback())
             {
                 var sqlMigration = new TSqlMigration(filePath, _fileIo);
-                string sqlCommand = sqlMigration.GetSqlCommand();
+                var sqlCommand = sqlMigration.GetSqlCommands();
 
-                Assert.AreEqual(expectedResults, sqlCommand, "This should contain no GO or go statements");
+                Assert.AreEqual("test contents category\r\n", sqlCommand[0], "This should contain no GO or go statements");
+                Assert.AreEqual("Test\r\n", sqlCommand[1], "This should contain no GO or go statements");
+                Assert.AreEqual("TEST\r\n", sqlCommand[2], "This should contain no GO or go statements");
             }
         }
 

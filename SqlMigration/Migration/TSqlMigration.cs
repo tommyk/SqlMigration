@@ -19,16 +19,6 @@ namespace SqlMigration
             _fileIO = fileIO;
         }
 
-        public override string GetSqlCommand()
-        {
-            string fileContents = this.GetFileContents();
-            //test, strip out and 'GO' commands
-            fileContents = fileContents.Replace("GO\r\n", string.Empty);
-            fileContents = fileContents.Replace("\r\nGO", string.Empty);
-            fileContents = fileContents.Replace("go\r\n", string.Empty);
-            fileContents = fileContents.Replace("\r\ngo", string.Empty);
-            return fileContents;
-        }
 
         public override IList<string> GetSqlCommands()
         {

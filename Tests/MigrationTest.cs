@@ -38,11 +38,6 @@ namespace Tests
             {
             }
 
-            public override string GetSqlCommand()
-            {
-                throw new System.NotImplementedException();
-            }
-
             public override IList<string> GetSqlCommands()
             {
                 throw new NotImplementedException();

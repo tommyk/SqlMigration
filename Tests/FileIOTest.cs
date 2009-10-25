@@ -185,11 +185,6 @@ namespace Tests
             {
             }
 
-            public override string GetSqlCommand()
-            {
-                return "sqlcommand";
-            }
-
             public override IList<string> GetSqlCommands()
             {
                 //return two sql commands

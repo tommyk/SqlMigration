@@ -36,13 +36,6 @@ namespace SqlMigration
         }
 
         /// <summary>
-        /// Used to get sql to run against db
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Move to using GetSqlCommands!, it can hand back only one command if we don't care about splitting up the commands between go statements")]
-        public abstract string GetSqlCommand();
-
-        /// <summary>
         /// A migration may have multiple statements in it being seperated 
         /// by GO statements(may only be the case for Sql Server, but this will take care of that problem)
         /// </summary>
