@@ -5,8 +5,8 @@ using SqlMigration;
 namespace Tests
 {
     /// <summary>
-    ///This is a test class for FileIOTest and is intended
-    ///to contain all FileIOTest Unit Tests
+    ///This is a test class for MigrationHelperTest and is intended
+    ///to contain all MigrationHelperTest Unit Tests
     ///</summary>
     [TestFixture]
     public class TaskTypeFactoryTest

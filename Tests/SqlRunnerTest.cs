@@ -44,8 +44,8 @@ namespace Tests
         {
             //setup fake migrations
             var migrations = new List<Migration>();
-            migrations.Add(FileIOTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
-            migrations.Add(FileIOTest.CreateMigrationObject(DateTime.Parse("1/2/2000")));
+            migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
+            migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/2/2000")));
 
             using(_mock.Record())
             {
@@ -103,8 +103,8 @@ namespace Tests
         //{
         //    //setup fake migrations
         //    var migrations = new List<Migration>();
-        //    migrations.Add(FileIOTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
-        //    migrations.Add(FileIOTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
+        //    migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
+        //    migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
 
         //    using (_mock.Record())
         //    {

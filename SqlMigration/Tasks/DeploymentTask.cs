@@ -9,15 +9,16 @@ namespace SqlMigration
     public class DeploymentTask : MigrationTask
     {
         private readonly IMigrationHelper _migrationHelper;
-
+        private readonly IFileIO _fileIo;
 
         #region Constructors
 
 
-        public DeploymentTask(Arguments arguments, IMigrationHelper migrationHelper)
+        public DeploymentTask(Arguments arguments, IMigrationHelper migrationHelper, IFileIO fileIo)
             : base(arguments)
         {
             _migrationHelper = migrationHelper;
+            _fileIo = fileIo;
         }
 
         #endregion
@@ -40,7 +41,7 @@ namespace SqlMigration
 
 
             //build up the commands
-            var sb = new StringBuilder(2048);
+            var sb = new StringBuilder(2048 * migrations.Count);
             //begin try and transaction 
             sb.AppendLine("BEGIN TRY");
             sb.AppendLine("BEGIN TRANSACTION SqlMigrationTransaction");
@@ -83,7 +84,7 @@ namespace SqlMigration
 
             //write file out
             string locationToCreateScript = base.Arguments.GetArgumentValue(TaskTypeConstants.DeploymentTask);
-            _migrationHelper.WriteFile(locationToCreateScript, sb.ToString());
+            _fileIo.WriteFile(locationToCreateScript, sb.ToString());
 
             return 0;
         }

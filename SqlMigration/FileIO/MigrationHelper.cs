@@ -9,7 +9,6 @@ namespace SqlMigration
     {
         private readonly IFileIO _fileOperationsWrapper;
 
-        //todo: take out the file wrapper, its unnecessary
         public MigrationHelper(IFileIO fileWrapper)
         {
             _fileOperationsWrapper = fileWrapper;
@@ -56,24 +55,24 @@ namespace SqlMigration
                 .ToList();
         }
 
-        public bool CreateFolder(string folderLocation)
-        {
-            return _fileOperationsWrapper.CreateFolder(folderLocation);
-        }
+        //public bool CreateFolder(string folderLocation)
+        //{
+        //    return _fileOperationsWrapper.CreateFolder(folderLocation);
+        //}
 
-        public bool CopyFile(string fileLocation, string copyLocation)
-        {
-            return _fileOperationsWrapper.Copy(fileLocation, copyLocation);
-        }
+        //public bool CopyFile(string fileLocation, string copyLocation)
+        //{
+        //    return _fileOperationsWrapper.Copy(fileLocation, copyLocation);
+        //}
 
-        public string ReadFileContents(string filePath)
-        {
-            return File.ReadAllText(filePath);
-        }
+        //public string ReadFileContents(string filePath)
+        //{
+        //    return File.ReadAllText(filePath);
+        //}
 
-        public void WriteFile(string locationOfFile, string contents)
-        {
-            File.WriteAllText(locationOfFile, contents);
-        }
+        //public void WriteFile(string locationOfFile, string contents)
+        //{
+        //    File.WriteAllText(locationOfFile, contents);
+        //}
     }
 }

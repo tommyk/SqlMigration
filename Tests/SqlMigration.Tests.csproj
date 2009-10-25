@@ -68,8 +68,8 @@
     <Compile Include="MigrationTaskFactoryTest.cs" />
     <Compile Include="RunSqlFileTaskTest.cs" />
     <Compile Include="DeploymentTaskTest.cs" />
+    <Compile Include="MigrationHelperTest.cs" />
     <Compile Include="FileIOTest.cs" />
-    <Compile Include="FileIOWrapperTest.cs" />
     <Compile Include="IntegrationTests\RunRealMigrationsTest.cs" />
     <Compile Include="MigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

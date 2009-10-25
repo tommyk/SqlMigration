@@ -15,6 +15,7 @@ namespace Tests
     public class DeploymentTaskTest : BaseTestClass
     {
         private IMigrationHelper _iMigrationHelper;
+        private IFileIO _iFileIo;
 
         public DeploymentTaskTest()
         {
@@ -24,6 +25,7 @@ namespace Tests
         void SetupTests(object sender, EventArgs e)
         {
             this._iMigrationHelper = Mock.StrictMock<IMigrationHelper>();
+            _iFileIo = Mock.StrictMock<IFileIO>();
         }
 
         //todo: Get rid of the dup'd code for testing!!!!
@@ -45,8 +47,8 @@ namespace Tests
 
             //create fake list to pass back
             var migrations = new List<Migration>();
-            migrations.Add(FileIOTest.CreateMigrationObject(secondDate));
-            migrations.Add(FileIOTest.CreateMigrationObject(firstDate));
+            migrations.Add(MigrationHelperTest.CreateMigrationObject(secondDate));
+            migrations.Add(MigrationHelperTest.CreateMigrationObject(firstDate));
 
             string fileContents =
 @"BEGIN TRY
@@ -85,14 +87,14 @@ END CATCH";
                     .Return(migrations);
 
                 //write out deployment script
-                Expect.Call(() => _iMigrationHelper.WriteFile(locationToDeploy, fileContents));
+                Expect.Call(() => _iFileIo.WriteFile(locationToDeploy, fileContents));
 
             }
             using (Mock.Playback())
             {
                 //act like we are pulling and pushing from a:\test, just easier to test against one location
                 var args = new Arguments(new[] { TaskTypeConstants.DeploymentTask, locationToDeploy, ArgumentConstants.ScriptDirectoryArg, scriptDirectory, ArgumentConstants.IncludeTestScriptsArg });
-                var deploymentTask = new DeploymentTask(args, _iMigrationHelper);
+                var deploymentTask = new DeploymentTask(args, _iMigrationHelper,_iFileIo);
 
                 //try to run task
                 int returnVal = deploymentTask.RunTask();

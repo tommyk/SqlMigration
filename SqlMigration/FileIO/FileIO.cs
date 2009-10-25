@@ -5,14 +5,6 @@ using System.Text;
 
 namespace SqlMigration
 {
-    public interface IFileIO
-    {
-        bool Copy(string filePath, string locationToCopyTo);
-        bool CreateFolder(string folderLocation);
-        string ReadConentsOfFile(string fileLocation);
-        List<string> ReadDirectoryFilenames(string directoryPath);
-    }
-
     public class FileIO : IFileIO
     {
         public bool Copy(string filePath, string locationToCopyTo)
@@ -79,7 +71,12 @@ namespace SqlMigration
             return files;
         }
 
-       
+        public void WriteFile(string path, string fileContents)
+        {
+            File.WriteAllText(path, fileContents);
+        }
+
+
         [Obsolete("Just use ToString on the migration object base class")]
         public static string GetFileNameFromFullPath(string filePath)
         {

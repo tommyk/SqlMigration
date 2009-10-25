@@ -113,7 +113,7 @@
 //            //doesn't have a value, so we start one
 //            last_date_used = !last_date_used.HasValue ? DateTime.Today : last_date_used.Value.AddDays(1);
 
-//            return FileIOTest.MakeMigrationFileNameFromDate(last_date_used.Value, desc);
+//            return MigrationHelperTest.MakeMigrationFileNameFromDate(last_date_used.Value, desc);
 //        }
 //    }
 //}

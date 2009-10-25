@@ -25,18 +25,18 @@ namespace Tests
             var connectionString = "asdfasdf";
             string filePath = @"A:\test.sql";
             string sqlFileContents = "create table asdf()";
-            var fileIO = MockRepository.GenerateMock<IMigrationHelper>();
+            var migrationHelper = MockRepository.GenerateMock<IMigrationHelper>();
             var dbConnection = MockRepository.GenerateMock<IDbConnection>();
             var transaction = MockRepository.GenerateMock<IDbTransaction>();
             var command = MockRepository.GenerateMock<IDbCommand>();
-            
+            var fileIo = MockRepository.GenerateMock<IFileIO>();
             
             var args = new Arguments(new[] {TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.ConnectionStringArg, connectionString});
 
             //Arrange
 
             //get file contents...
-            fileIO.Stub(io => io.ReadFileContents(filePath)).Return(sqlFileContents);
+            fileIo.Stub(io => io.ReadConentsOfFile(filePath)).Return(sqlFileContents);
 
             //transaction
             dbConnection.Stub(connection => connection.BeginTransaction()).Return(transaction);
@@ -46,7 +46,7 @@ namespace Tests
 
 
             //Act
-            var runSqlFileTask = new RunSqlFileTask(args, fileIO, dbConnection);
+            var runSqlFileTask = new RunSqlFileTask(args, migrationHelper, dbConnection, fileIo);
             int success = runSqlFileTask.RunTask();
 
             //Assert
