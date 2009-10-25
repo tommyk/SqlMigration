@@ -15,7 +15,7 @@ namespace Tests
     [TestFixture]
     public class TSqlMigrationTest : BaseTestClass
     {
-        private IFileIO _fileIo;
+        private IMigrationHelper _migrationHelper;
 
         public TSqlMigrationTest()
         {
@@ -24,7 +24,7 @@ namespace Tests
 
         void SetupCrap(object sender, EventArgs e)
         {
-            _fileIo = Mock.DynamicMock<IFileIO>();
+            _migrationHelper = Mock.DynamicMock<IMigrationHelper>();
         }
 
         /// <summary>
@@ -40,12 +40,12 @@ namespace Tests
             using (Mock.Record())
             {
                 //try to read the file
-                Expect.Call(_fileIo.ReadFileContents(filePath))
+                Expect.Call(_migrationHelper.ReadFileContents(filePath))
                     .Return(fileContents);
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath, _migrationHelper);
                 var sqlCommand = sqlMigration.GetSqlCommands();
 
                 Assert.AreEqual(fileContents, sqlCommand[0], "This should be the same contents");
@@ -69,12 +69,12 @@ GO";
             using (Mock.Record())
             {
                 //try to read the file
-                Expect.Call(_fileIo.ReadFileContents(filePath))
+                Expect.Call(_migrationHelper.ReadFileContents(filePath))
                     .Return(fileContents);
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath, _migrationHelper);
                 var sqlCommand = sqlMigration.GetSqlCommands();
 
                 Assert.AreEqual("test contents category\r\n", sqlCommand[0], "This should contain no GO or go statements");
@@ -106,12 +106,12 @@ GO";
             using (Mock.Record())
             {
                 //try to read the file
-                Expect.Call(_fileIo.ReadFileContents(filePath))
+                Expect.Call(_migrationHelper.ReadFileContents(filePath))
                     .Return(fileContents);
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath, _migrationHelper);
                 IList<string> sqlCommand = sqlMigration.GetSqlCommands();
 
                 //there should be 3 commands inside this fake sql file
@@ -136,12 +136,12 @@ TEST";
             using (Mock.Record())
             {
                 //try to read the file
-                Expect.Call(_fileIo.ReadFileContents(filePath))
+                Expect.Call(_migrationHelper.ReadFileContents(filePath))
                     .Return(fileContents);
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath, _migrationHelper);
                 IList<string> sqlCommand = sqlMigration.GetSqlCommands();
 
                 //there should be 3 commands inside this fake sql file

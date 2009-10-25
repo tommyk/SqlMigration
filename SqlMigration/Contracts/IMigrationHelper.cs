@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SqlMigration
 {
-    public interface IFileIO
+    public interface IMigrationHelper
     {
         IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts);
         IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate);

@@ -5,15 +5,15 @@ namespace SqlMigration
 {
     public class MigrateDatabaseForwardTask : MigrationTask
     {
-        private readonly IFileIO _fileIO;
+        private readonly IMigrationHelper _migrationHelper;
         private readonly ISqlRunner _sqlRunner;
 
         #region Constructors
 
-        public MigrateDatabaseForwardTask(Arguments arguments, IFileIO fileIO, ISqlRunner sqlRunner)
+        public MigrateDatabaseForwardTask(Arguments arguments, IMigrationHelper migrationHelper, ISqlRunner sqlRunner)
             : base(arguments)
         {
-            _fileIO = fileIO;
+            _migrationHelper = migrationHelper;
             _sqlRunner = sqlRunner;
         }
 
@@ -27,7 +27,7 @@ namespace SqlMigration
             string scriptDirectory = Arguments.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
             //make it look for a flag to include test data
             bool includeTestData = Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
-            IList<Migration> migartions = _fileIO.GetMigrationsInOrder(scriptDirectory, includeTestData); 
+            IList<Migration> migartions = _migrationHelper.GetMigrationsInOrder(scriptDirectory, includeTestData); 
             
 
             //grab connection string

@@ -25,7 +25,7 @@ namespace Tests
             var connectionString = "asdfasdf";
             string filePath = @"A:\test.sql";
             string sqlFileContents = "create table asdf()";
-            var fileIO = MockRepository.GenerateMock<IFileIO>();
+            var fileIO = MockRepository.GenerateMock<IMigrationHelper>();
             var dbConnection = MockRepository.GenerateMock<IDbConnection>();
             var transaction = MockRepository.GenerateMock<IDbTransaction>();
             var command = MockRepository.GenerateMock<IDbCommand>();

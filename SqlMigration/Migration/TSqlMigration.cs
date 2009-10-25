@@ -6,17 +6,12 @@ namespace SqlMigration
 {
     public class TSqlMigration : Migration
     {
-        private readonly IFileIO _fileIO;
+        private readonly IMigrationHelper _migrationHelper;
 
-        //public TSqlMigration(string filePath)
-        //    : this(filePath, new FileIO(new FileIOWrapper())) //todo: use DI to get rid of this!
-        //{
-        //}
-
-        public TSqlMigration(string filePath, IFileIO fileIO)
+        public TSqlMigration(string filePath, IMigrationHelper migrationHelper)
             : base(filePath)
         {
-            _fileIO = fileIO;
+            _migrationHelper = migrationHelper;
         }
 
 
@@ -73,7 +68,7 @@ namespace SqlMigration
 
         private string GetFileContents()
         {
-            return _fileIO.ReadFileContents(base.FilePath);
+            return _migrationHelper.ReadFileContents(base.FilePath);
         }
     }
 }

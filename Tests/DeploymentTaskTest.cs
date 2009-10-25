@@ -14,7 +14,7 @@ namespace Tests
     [TestFixture]
     public class DeploymentTaskTest : BaseTestClass
     {
-        private IFileIO iFileIO;
+        private IMigrationHelper _iMigrationHelper;
 
         public DeploymentTaskTest()
         {
@@ -23,7 +23,7 @@ namespace Tests
 
         void SetupTests(object sender, EventArgs e)
         {
-            this.iFileIO = Mock.StrictMock<IFileIO>();
+            this._iMigrationHelper = Mock.StrictMock<IMigrationHelper>();
         }
 
         //todo: Get rid of the dup'd code for testing!!!!
@@ -81,18 +81,18 @@ END CATCH";
             using (Mock.Record())
             {
                 //get the migrations (all of them in this case)
-                Expect.Call(iFileIO.GetMigrationsInOrder(scriptDirectory, true))
+                Expect.Call(_iMigrationHelper.GetMigrationsInOrder(scriptDirectory, true))
                     .Return(migrations);
 
                 //write out deployment script
-                Expect.Call(() => iFileIO.WriteFile(locationToDeploy, fileContents));
+                Expect.Call(() => _iMigrationHelper.WriteFile(locationToDeploy, fileContents));
 
             }
             using (Mock.Playback())
             {
                 //act like we are pulling and pushing from a:\test, just easier to test against one location
                 var args = new Arguments(new[] { TaskTypeConstants.DeploymentTask, locationToDeploy, ArgumentConstants.ScriptDirectoryArg, scriptDirectory, ArgumentConstants.IncludeTestScriptsArg });
-                var deploymentTask = new DeploymentTask(args, iFileIO);
+                var deploymentTask = new DeploymentTask(args, _iMigrationHelper);
 
                 //try to run task
                 int returnVal = deploymentTask.RunTask();

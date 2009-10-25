@@ -40,8 +40,8 @@ namespace SqlMigration
                 _container.AddComponentLifeStyle("migrateTask", typeof(MigrateDatabaseForwardTask), LifestyleType.Transient);
 
                 //fileIO
-                _container.AddComponentLifeStyle("fileIO", typeof(IFileIO), typeof(FileIO), LifestyleType.Transient);
-                _container.AddComponentLifeStyle("fileIOWrapper", typeof(IFileIOWrapper), typeof(FileIOWrapper), LifestyleType.Transient);
+                _container.AddComponentLifeStyle("fileIO", typeof(IMigrationHelper), typeof(MigrationHelper), LifestyleType.Transient);
+                _container.AddComponentLifeStyle("fileIOWrapper", typeof(IFileIO), typeof(FileIO), LifestyleType.Transient);
 
                 //sqlRunner
                 _container.AddComponentLifeStyle("sqlRunner", typeof(ISqlRunner), typeof(SqlRunner), LifestyleType.Transient);

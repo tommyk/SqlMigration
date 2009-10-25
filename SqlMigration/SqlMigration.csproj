@@ -72,9 +72,9 @@
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="FileIO\MigrationHelper.cs" />
     <Compile Include="FileIO\FileIO.cs" />
-    <Compile Include="FileIO\FileIOWrapper.cs" />
-    <Compile Include="Contracts\IFileIO.cs" />
+    <Compile Include="Contracts\IMigrationHelper.cs" />
     <Compile Include="DateParser.cs" />
     <Compile Include="Contracts\Migration.cs" />
     <Compile Include="IoC.cs" />

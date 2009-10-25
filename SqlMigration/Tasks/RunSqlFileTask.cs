@@ -6,13 +6,13 @@ namespace SqlMigration
 {
     public class RunSqlFileTask : MigrationTask
     {
-        private readonly IFileIO _fileIo;
+        private readonly IMigrationHelper _migrationHelper;
         private readonly IDbConnection _connection;
 
-        public RunSqlFileTask(Arguments arguments, IFileIO fileIo, IDbConnection dbConnection)
+        public RunSqlFileTask(Arguments arguments, IMigrationHelper migrationHelper, IDbConnection dbConnection)
             : base(arguments)
         {
-            _fileIo = fileIo;
+            _migrationHelper = migrationHelper;
             _connection = dbConnection;
         }
 
@@ -24,7 +24,7 @@ namespace SqlMigration
             string sqlFilePath = base.Arguments.GetArgumentValue(TaskTypeConstants.RunSqlFileTask);
 
             //get file contents
-            string sqlCommand = _fileIo.ReadFileContents(sqlFilePath);
+            string sqlCommand = _migrationHelper.ReadFileContents(sqlFilePath);
 
             //run inside transaction?
             bool runInsideTransaction = !Arguments.DoesArgumentExist(ArgumentConstants.RunWithoutTransactionArg);

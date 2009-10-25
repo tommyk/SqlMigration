@@ -8,16 +8,16 @@ namespace SqlMigration
 {
     public class DeploymentTask : MigrationTask
     {
-        private readonly IFileIO _fileIO;
+        private readonly IMigrationHelper _migrationHelper;
 
 
         #region Constructors
 
 
-        public DeploymentTask(Arguments arguments, IFileIO fileIO)
+        public DeploymentTask(Arguments arguments, IMigrationHelper migrationHelper)
             : base(arguments)
         {
-            _fileIO = fileIO;
+            _migrationHelper = migrationHelper;
         }
 
         #endregion
@@ -36,7 +36,7 @@ namespace SqlMigration
             bool includeTestData = base.Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
 
             //get migrations
-            migrations = _fileIO.GetMigrationsInOrder(locationOfScripts, includeTestData);
+            migrations = _migrationHelper.GetMigrationsInOrder(locationOfScripts, includeTestData);
 
 
             //build up the commands
@@ -83,7 +83,7 @@ namespace SqlMigration
 
             //write file out
             string locationToCreateScript = base.Arguments.GetArgumentValue(TaskTypeConstants.DeploymentTask);
-            _fileIO.WriteFile(locationToCreateScript, sb.ToString());
+            _migrationHelper.WriteFile(locationToCreateScript, sb.ToString());
 
             return 0;
         }

@@ -20,7 +20,7 @@ namespace Tests
             string filePath = "C:\\testfolder\\asdf asdf\\filename.sql";
             string expected = "filename.sql";
             string actual;
-            actual = FileIOWrapper.GetFileNameFromFullPath(filePath);
+            actual = FileIO.GetFileNameFromFullPath(filePath);
             Assert.AreEqual(expected, actual, "It should find the file name");
         }
     }

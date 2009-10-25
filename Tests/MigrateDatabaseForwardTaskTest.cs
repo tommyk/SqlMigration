@@ -22,7 +22,7 @@ namespace Tests
         public void run_task_wihtout_running_inside_transaction()
         {
             var mock = new Rhino.Mocks.MockRepository();
-            var fileIO = mock.DynamicMock<IFileIO>();
+            var fileIO = mock.DynamicMock<IMigrationHelper>();
             var sqlRunner = mock.DynamicMock<ISqlRunner>();
 
             //migrations

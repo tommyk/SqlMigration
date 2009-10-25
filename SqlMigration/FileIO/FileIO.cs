@@ -1,79 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 
 namespace SqlMigration
 {
+    public interface IFileIO
+    {
+        bool Copy(string filePath, string locationToCopyTo);
+        bool CreateFolder(string folderLocation);
+        string ReadConentsOfFile(string fileLocation);
+        List<string> ReadDirectoryFilenames(string directoryPath);
+    }
+
     public class FileIO : IFileIO
     {
-        private readonly IFileIOWrapper _fileOperationsWrapper;
-
-        //todo: take out the file wrapper, its unnecessary
-        public FileIO(IFileIOWrapper fileWrapper)
+        public bool Copy(string filePath, string locationToCopyTo)
         {
-            _fileOperationsWrapper = fileWrapper;
-        }
-
-
-        public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts)
-        {
-            //push down a default datetime object (1/1/0001) since all migrations will be before that.
-            return GetMigrationsInOrder(directoryOfScripts, includeTestScripts, new DateTime());
-        }
-
-
-        //todo: do we really need the filter date?
-        public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate)
-        {
-            var fileNames = new List<string>();
-
-            //grab files
-            fileNames.AddRange(_fileOperationsWrapper.ReadDirectoryFilenames(directoryOfScripts));
-            //grab test files?
-            if (includeTestScripts)
-                fileNames.AddRange(_fileOperationsWrapper.ReadDirectoryFilenames(directoryOfScripts + "\\test"));
-
-            //add to migrations
-            var migrations = new List<Migration>();
-            foreach (string fileName in fileNames)
+            bool success = true;
+            try
             {
-
-                /* Lets use a factory that we can let users set a file extenstion to a type
-                 * so that its very extensivble. Follow the same thing as TaskTypeFactory and MigrationTaskFactory
-                 */
-                
-                //add migration
-                Migration migration = MigrationFactory.GetMigrationByFileExtenstion(fileName);
-                if(migration != null)
-                    migrations.Add(migration);
-                
+                //have to get the filename out of the filePath
+                string fileName = GetFileNameFromFullPath(filePath);
+                File.Copy(filePath, locationToCopyTo + "\\" + fileName, true);
+                //set it normal, not read-only...
+                File.SetAttributes(locationToCopyTo + "\\" + fileName, FileAttributes.Normal);
+            }
+            catch (Exception)
+            {
+                success = false;
             }
 
-            return migrations
-                .Where(migration => migration.MigrationDate >= filterDate) //filter date
-                .OrderBy(migration => migration.MigrationDate) //order by date
-                .ToList();
+            return success;
         }
 
         public bool CreateFolder(string folderLocation)
         {
-            return _fileOperationsWrapper.CreateFolder(folderLocation);
+            bool success = true;
+            try
+            {
+                //delete if it exists first
+                if (Directory.Exists(folderLocation))
+                    Directory.Delete(folderLocation, true);
+
+                //create it
+                Directory.CreateDirectory(folderLocation);
+                //mark it worked
+            }
+            catch (Exception ex)
+            {
+                //todo: replace w/ logger
+                Console.WriteLine(string.Format("Error occured with folder stuff\r\n\r\n{0}", ex.Message));
+                success = false;
+            }
+
+            return success;
         }
 
-        public bool CopyFile(string fileLocation, string copyLocation)
+        public string ReadConentsOfFile(string fileLocation)
         {
-            return _fileOperationsWrapper.Copy(fileLocation, copyLocation);
+            StringBuilder sb = new StringBuilder(1024);
+            foreach (string line in File.ReadAllLines(fileLocation))
+            {
+                sb.AppendLine(line);
+            }
+
+            return sb.ToString();
         }
 
-        public string ReadFileContents(string filePath)
+        public List<string> ReadDirectoryFilenames(string directoryPath)
         {
-            return File.ReadAllText(filePath);
+            var files = new List<string>();
+
+            //insert files with .sql and .dat extensions
+            files.InsertRange(0, Directory.GetFiles(directoryPath, "*.sql"));
+            files.InsertRange(0, Directory.GetFiles(directoryPath, "*.dat"));
+
+            return files;
         }
 
-        public void WriteFile(string locationOfFile, string contents)
+       
+        [Obsolete("Just use ToString on the migration object base class")]
+        public static string GetFileNameFromFullPath(string filePath)
         {
-            File.WriteAllText(locationOfFile, contents);
+            StringBuilder sb = new StringBuilder(64);
+            List<char> fileName = new List<char>();
+            for(int i = filePath.Length - 1;i >= 0;--i)
+            {
+                if (filePath[i] == Char.Parse("\\"))
+                    break;
+                //since its not a break, lets add the char
+                fileName.Add(filePath[i]);
+            }
+
+            //reverse it
+            fileName.Reverse();
+            sb.Append(fileName.ToArray());
+
+            return sb.ToString();
         }
+
     }
 }

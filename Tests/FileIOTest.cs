@@ -33,7 +33,7 @@ namespace Tests
         public void mock_files_and_make_sure_they_come_back_in_order()
         {
             var mock = new MockRepository();
-            var fileWrapper = mock.DynamicMock<IFileIOWrapper>();
+            var fileWrapper = mock.DynamicMock<IFileIO>();
 
             //fake dates to test against
             var firstDate = DateTime.Parse("1/1/2008 1:11:00");
@@ -65,7 +65,7 @@ namespace Tests
             }
             using (mock.Playback())
             {
-                var fileIO = new FileIO(fileWrapper);
+                var fileIO = new MigrationHelper(fileWrapper);
                 IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
@@ -89,7 +89,7 @@ namespace Tests
         public void GetMigrationsInOrderTest()
         {
             var mock = new MockRepository();
-            var fileWrapper = mock.DynamicMock<IFileIOWrapper>();
+            var fileWrapper = mock.DynamicMock<IFileIO>();
 
             //fake dates to test against
             var firstDate = DateTime.Parse("1/1/2008 1:11:00");
@@ -121,7 +121,7 @@ namespace Tests
             }
             using (mock.Playback())
             {
-                var fileIO = new FileIO(fileWrapper);
+                var fileIO = new MigrationHelper(fileWrapper);
                 IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false, secondDate);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
@@ -140,7 +140,7 @@ namespace Tests
             string fileLocationWithName = currentLocation + "\\test.txt";
 
             //attempt to write out a file called test.txt
-            var fileIO = new FileIO(null);
+            var fileIO = new MigrationHelper(null);
 
             string contents = "THIS IS GENERATED IN A UNIT TEST";
             fileIO.WriteFile(fileLocationWithName, contents);
