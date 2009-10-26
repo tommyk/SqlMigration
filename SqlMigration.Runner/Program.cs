@@ -14,7 +14,7 @@ namespace SqlMigration.Runner
             if (args.Length != 0)
             {
                 //setup IoC
-                IoC.Current.SetupWindsorContainer();
+                //IoC.Current.SetupWindsorContainer();
 
                 //create the arguments
                 Arguments arguments = new Arguments(args);

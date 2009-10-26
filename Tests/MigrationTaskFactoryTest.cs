@@ -1,14 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
 using SqlMigration;
-
-using System.Collections.Generic;
 
 namespace Tests
 {
@@ -22,7 +14,7 @@ namespace Tests
         [TestFixtureSetUp]
         public void SetupIoC()
         {
-            IoC.Current.SetupWindsorContainer();
+            //IoC.Current.SetupWindsorContainer();
         }
 
         [Test]

@@ -20,11 +20,11 @@ namespace Tests
     public class MigrationHelperTest : BaseTestClass
     {
 
-        [TestFixtureSetUp]
-        public void TestSetup()
-        {
-            IoC.Current.SetupWindsorContainer();
-        }
+        //[TestFixtureSetUp]
+        //public void TestSetup()
+        //{
+        //    IoC.Current.SetupWindsorContainer();
+        //}
 
         /// <summary>
         ///A test for GetMigrationsInOrder

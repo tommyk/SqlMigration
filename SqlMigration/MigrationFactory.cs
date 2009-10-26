@@ -30,7 +30,7 @@ namespace SqlMigration
 
             //if we found a type, lets try to create it!!
             if (migrationType != null)
-                migration = (Migration) IoC.Current.Container.Resolve(migrationType, new{filePath = filePath});
+                migration = (Migration) IoC.Current.Resolve(migrationType, new{filePath = filePath});
 
             return migration;
         }

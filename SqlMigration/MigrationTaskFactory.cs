@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SqlMigration
 {
@@ -14,7 +11,7 @@ namespace SqlMigration
             //resolve using windsor
             Type migrationType = TaskTypeFactory.GetTaskType(args.TaskType);
 
-            task = (MigrationTask)IoC.Current.Container.Resolve(migrationType,
+            task = (MigrationTask)IoC.Current.Resolve(migrationType,
                                                                 new { arguments = args });
 
             return task;

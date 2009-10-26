@@ -16,16 +16,16 @@ namespace Tests
     public class MigrationFactoryTest : BaseTestClass
     {
 
-        public MigrationFactoryTest()
-        {
-            base.Setup += Setup;
-        }
+        //public MigrationFactoryTest()
+        //{
+        //    base.Setup += Setup;
+        //}
 
-        void Setup(object sender, EventArgs e)
-        {
-            //setup the ioc
-            IoC.Current.SetupWindsorContainer();
-        }
+        //void Setup(object sender, EventArgs e)
+        //{
+        //    //setup the ioc
+        //    //IoC.Current.SetupWindsorContainer();
+        //}
 
         /// <summary>
         ///A test for RunTask
