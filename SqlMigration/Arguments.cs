@@ -15,7 +15,6 @@ namespace SqlMigration
     public class Arguments
     {
         private readonly string[] _arguments;
-        //private static readonly List<KeyValuePair<TaskType, string>> TaskTypeList;
 
         #region Constructors
 

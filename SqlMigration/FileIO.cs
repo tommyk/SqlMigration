@@ -77,7 +77,6 @@ namespace SqlMigration
         }
 
 
-        [Obsolete("Just use ToString on the migration object base class")]
         public static string GetFileNameFromFullPath(string filePath)
         {
             StringBuilder sb = new StringBuilder(64);

@@ -73,23 +73,24 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Contracts\IFileIO.cs" />
-    <Compile Include="FileIO\MigrationHelper.cs" />
-    <Compile Include="FileIO\FileIO.cs" />
+    <Compile Include="MigrationHelper.cs" />
+    <Compile Include="FileIO.cs" />
     <Compile Include="Contracts\IMigrationHelper.cs" />
     <Compile Include="DateParser.cs" />
     <Compile Include="Contracts\Migration.cs" />
     <Compile Include="IoC.cs" />
-    <Compile Include="MigrationFactory.cs" />
-    <Compile Include="Migration\TSqlMigration.cs" />
+    <Compile Include="Factory\MigrationFactory.cs" />
+    <Compile Include="Factory\MigrationTypeFactory.cs" />
+    <Compile Include="TSqlMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Contracts\ISqlRunner.cs" />
     <Compile Include="SqlRunner\SqlRunner.cs" />
     <Compile Include="Tasks\DeploymentTask.cs" />
     <Compile Include="Contracts\MigrationTask.cs" />
     <Compile Include="Tasks\MigrateDatabaseForwardTask.cs" />
-    <Compile Include="MigrationTaskFactory.cs" />
+    <Compile Include="Factory\MigrationTaskFactory.cs" />
     <Compile Include="Tasks\RunSqlFileTask.cs" />
-    <Compile Include="TaskTypeFactory.cs" />
+    <Compile Include="Factory\TaskTypeFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
