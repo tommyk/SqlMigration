@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Castle.Core.Logging;
 
 namespace SqlMigration
 {
     public class FileIO : IFileIO
     {
+        private ILogger _logger = NullLogger.Instance;
+        public ILogger Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
+        }
+
+
         public bool Copy(string filePath, string locationToCopyTo)
         {
             bool success = true;
@@ -41,8 +50,7 @@ namespace SqlMigration
             }
             catch (Exception ex)
             {
-                //todo: replace w/ logger
-                Console.WriteLine(string.Format("Error occured with folder stuff\r\n\r\n{0}", ex.Message));
+                Logger.Error(string.Format("Error occured with folder stuff\r\n\r\n{0}", ex.Message));
                 success = false;
             }
 
@@ -81,7 +89,7 @@ namespace SqlMigration
         {
             StringBuilder sb = new StringBuilder(64);
             List<char> fileName = new List<char>();
-            for(int i = filePath.Length - 1;i >= 0;--i)
+            for (int i = filePath.Length - 1; i >= 0; --i)
             {
                 if (filePath[i] == Char.Parse("\\"))
                     break;

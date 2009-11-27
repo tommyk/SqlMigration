@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Data.SqlClient;
+using Castle.Core.Logging;
 
 
 namespace SqlMigration
 {
     public class SqlRunner : ISqlRunner
     {
-        private const string SQLMIGRATION_TABLE_NAME = "SqlMigration";
+        private const string SqlmigrationTableName = "SqlMigration";
         private readonly IDbConnection _connection;
+        private ILogger _logger = NullLogger.Instance;
+
 
         public SqlRunner(IDbConnection connection)
         {
@@ -22,6 +25,12 @@ namespace SqlMigration
         {
             get { return _connection.ConnectionString; }
             set { _connection.ConnectionString = value; }
+        }
+
+        public ILogger Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
         }
 
 
@@ -57,22 +66,21 @@ namespace SqlMigration
                 //loop on migrations
                 foreach (Migration migration in migrations.Where(m => !migrationsThatHaveAlreadyBeenRun.Contains(m.ToString())))
                 {
-                    //todo:replace with logger implemetation
-                    Console.WriteLine(string.Format("Running migration : {0}", migration.ToString()));
+                    Logger.Debug(string.Format("Running migration : {0}", migration.ToString()));
 
                     //run each sql command by itself
                     foreach (string sqlCommand in migration.GetSqlCommands())
                     {
-                        Console.WriteLine("Starting to run sql");
+                        Logger.Debug("Starting to run sql");
                         command.CommandText = sqlCommand;
                         command.ExecuteNonQuery();
-                        Console.WriteLine("Ending running sql");
+                        Logger.Debug("Ending running sql");
                     }
 
                     //insert into table the name of the migration that was run
                     if (trackMigrations)
                     {
-                        command.CommandText = string.Format("INSERT INTO {0} VALUES ('{1}');", SQLMIGRATION_TABLE_NAME,
+                        command.CommandText = string.Format("INSERT INTO {0} VALUES ('{1}');", SqlmigrationTableName,
                                                             migration.ToString());
                         command.ExecuteNonQuery();
                     }
@@ -81,9 +89,9 @@ namespace SqlMigration
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
                 {
-                    Console.WriteLine("Before Commit");
+                    Logger.Debug("Before Commit");
                     transaction.Commit();
-                    Console.WriteLine("After Commit");
+                    Logger.Debug("After Commit");
                 }
 
                 //mark success
@@ -95,46 +103,46 @@ namespace SqlMigration
                 {
                     if (transaction != null)
                     {
-                        Console.WriteLine("Error, trying to rollback");
+                        Logger.Error("Error, trying to rollback");
                         transaction.Rollback();
-                        Console.WriteLine("rollback complete");
+                        Logger.Error("rollback complete");
                     }
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine("Exception" + ex.GetType() + " encountered while rolling back transaction.");
-                    Console.WriteLine(string.Format("Exception Message: {0}", ex.Message));
+                    Logger.Error("Exception" + ex.GetType() + " encountered while rolling back transaction.");
+                    Logger.Error(string.Format("Exception Message: {0}", ex.Message));
                 }
-                Console.WriteLine("Exception " + e.GetType() + " encountered while running sql files.");
-                WriteOutAllExcpetionInformation(e);
+                Logger.Error("Exception " + e.GetType() + " encountered while running sql files.");
+                WriteOutAllExcpetionInformation(e,Logger);
             }
             finally
             {
                 if (_connection != null)
                 {
-                    Console.WriteLine("Closing connection...");
+                    Logger.Debug("Closing connection...");
                     _connection.Close();
-                    Console.WriteLine("Done closing connection");
+                    Logger.Debug("Done closing connection");
                 }
             }
 
             return success;
         }
 
-        private static void WriteOutAllExcpetionInformation(Exception e)
+        private static void WriteOutAllExcpetionInformation(Exception e, ILogger logger)
         {
             if(e != null)
             {
-                Console.WriteLine(e.Message);
+                logger.Error(e.Message);
                 if (e.InnerException != null) 
-                    WriteOutAllExcpetionInformation(e.InnerException);
+                    WriteOutAllExcpetionInformation(e.InnerException,logger);
             }
         }
 
         private IList<string> SetupAndCheckWhatMigrationsShouldBeRun(IDbCommand command)
         {
             //first check for the table
-            command.CommandText = string.Format("SELECT case when object_id('{0}')is not null then 1 else 0 end", SQLMIGRATION_TABLE_NAME);
+            command.CommandText = string.Format("SELECT case when object_id('{0}')is not null then 1 else 0 end", SqlmigrationTableName);
 
             bool isTableSetup = (int)command.ExecuteScalar() > 0;
             //if its not there, create it

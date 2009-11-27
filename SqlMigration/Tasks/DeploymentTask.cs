@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Castle.Core.Logging;
 
 namespace SqlMigration
 {
@@ -10,6 +11,7 @@ namespace SqlMigration
     {
         private readonly IMigrationHelper _migrationHelper;
         private readonly IFileIO _fileIo;
+        private ILogger _logger = NullLogger.Instance;
 
         #region Constructors
 
@@ -22,6 +24,12 @@ namespace SqlMigration
         }
 
         #endregion
+
+        public ILogger Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
+        }
 
         public override int RunTask()
         {
@@ -51,7 +59,7 @@ namespace SqlMigration
             foreach (Migration migration in migrations.OrderBy(migration => migration.MigrationDate))
             {
                 //todo: use a logger instead
-                Console.WriteLine(string.Format("Writing out migration {0}", migration));
+                Logger.Debug(string.Format("Writing out migration {0}", migration));
 
                 //see if we need to run this migration
                 sb.AppendLine(string.Format("IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '{0}') = 0", migration));

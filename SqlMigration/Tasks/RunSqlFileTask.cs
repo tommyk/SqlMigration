@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using Castle.Core.Logging;
 
 namespace SqlMigration
 {
@@ -9,6 +10,8 @@ namespace SqlMigration
         private readonly IMigrationHelper _migrationHelper;
         private readonly IDbConnection _connection;
         private readonly IFileIO _fileIo;
+        private ILogger _logger = NullLogger.Instance;
+
 
         public RunSqlFileTask(Arguments arguments, IMigrationHelper migrationHelper, IDbConnection dbConnection, IFileIO fileIo)
             : base(arguments)
@@ -16,6 +19,12 @@ namespace SqlMigration
             _migrationHelper = migrationHelper;
             _connection = dbConnection;
             _fileIo = fileIo;
+        }
+
+        public ILogger Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
         }
 
         public override int RunTask()
@@ -55,17 +64,17 @@ namespace SqlMigration
                     command.Transaction = transaction;
 
                 //run each sql command by itself
-                Console.WriteLine("Starting to run sql");
+                Logger.Debug("Starting to run sql");
                 command.CommandText = sqlCommand;
                 command.ExecuteNonQuery();
-                Console.WriteLine("Ending running sql");
+                Logger.Debug("Ending running sql");
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
                 {
-                    Console.WriteLine("Before Transaction Commit");
+                    Logger.Debug("Before Transaction Commit");
                     transaction.Commit();
-                    Console.WriteLine("After Transaction Commit");
+                    Logger.Debug("After Transaction Commit");
                 }
 
                 //mark success
@@ -77,26 +86,26 @@ namespace SqlMigration
                 {
                     if (transaction != null)
                     {
-                        Console.WriteLine("Error, trying to rollback");
+                        Logger.Error("Error, trying to rollback");
                         transaction.Rollback();
-                        Console.WriteLine("rollback complete");
+                        Logger.Error("rollback complete");
                     }
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine("Exception" + ex.GetType() + " encountered while rolling back transaction.");
-                    Console.WriteLine(string.Format("Exception Message: {0}", ex.Message));
+                    Logger.Error("Exception" + ex.GetType() + " encountered while rolling back transaction.");
+                    Logger.Error(string.Format("Exception Message: {0}", ex.Message));
                 }
-                Console.WriteLine("Exception " + e.GetType() + " encountered while running sql files.");
-                WriteOutAllExcpetionInformation(e);
+                Logger.Error("Exception " + e.GetType() + " encountered while running sql files.");
+                WriteOutAllExcpetionInformation(e, Logger);
             }
             finally
             {
                 if (_connection != null)
                 {
-                    Console.WriteLine("Closing connection...");
+                    Logger.Debug("Closing connection...");
                     _connection.Close();
-                    Console.WriteLine("Done closing connection");
+                    Logger.Debug("Done closing connection");
                 }
             }
 
@@ -104,13 +113,13 @@ namespace SqlMigration
 
         }
 
-        private static void WriteOutAllExcpetionInformation(Exception e)
+        private static void WriteOutAllExcpetionInformation(Exception e, ILogger logger)
         {
             if (e != null)
             {
-                Console.WriteLine(e.Message);
+                logger.Error(e.Message);
                 if (e.InnerException != null)
-                    WriteOutAllExcpetionInformation(e.InnerException);
+                    WriteOutAllExcpetionInformation(e.InnerException, logger);
             }
         }
     }
