@@ -22,7 +22,6 @@ namespace SqlMigration
         }
 
 
-        //todo: do we really need the filter date?
         public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts, DateTime filterDate)
         {
             var fileNames = new List<string>();
@@ -55,24 +54,5 @@ namespace SqlMigration
                 .ToList();
         }
 
-        //public bool CreateFolder(string folderLocation)
-        //{
-        //    return _fileOperationsWrapper.CreateFolder(folderLocation);
-        //}
-
-        //public bool CopyFile(string fileLocation, string copyLocation)
-        //{
-        //    return _fileOperationsWrapper.Copy(fileLocation, copyLocation);
-        //}
-
-        //public string ReadFileContents(string filePath)
-        //{
-        //    return File.ReadAllText(filePath);
-        //}
-
-        //public void WriteFile(string locationOfFile, string contents)
-        //{
-        //    File.WriteAllText(locationOfFile, contents);
-        //}
     }
 }

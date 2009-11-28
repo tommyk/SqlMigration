@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="ProjectName" basedir="." default="test">
+
+    <property name="root.folder" value="${directory::get-current-directory()}" />
+    <property name="sqlmigration.solution" value="${root.folder}\SqlMigration.sln" />
+    <property name="build.target" value="debug" />
+    <property name="build.folder" value="${root.folder}\build\${build.target}" />
+
+    <!--load up custom nant tasks-->
+
+    <target name="create_build_folder">
+        <delete dir="${build.folder}" />
+        <mkdir dir="${build.folder}" />
+    </target>
+
+    <target name="build" depends="create_build_folder">
+        <!--build w/ msbuild-->
+        <msbuild project="${sqlmigration.solution}">
+            <arg value="/property:Configuration=${build.target}" />
+            <arg value="/t:Rebuild" />
+            <arg value="/p:OutputPath=${build.folder}" />
+        </msbuild>
+    </target>
+    
+    
+    <target name="test" depends="build">
+        <!--Test here-->
+        <nunit2>
+            <formatter type="Plain" />
+            <test assemblyname="${build.folder}\SqlMigration.Tests.dll" />
+        </nunit2>
+    </target>
+    
+</project>
