@@ -9,13 +9,13 @@ namespace SqlMigration.Runner
     {
         public static int Main(string[] args)
         {
+            //setup log4net
+            log4net.Config.XmlConfigurator.Configure();
+
             int returnValue = -1;
 
             if (args.Length != 0)
             {
-                //setup IoC
-                //IoC.Current.SetupWindsorContainer();
-
                 //create the arguments
                 Arguments arguments = new Arguments(args);
 
