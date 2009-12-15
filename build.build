@@ -22,7 +22,6 @@
         </msbuild>
     </target>
     
-    
     <target name="test" depends="build">
         <!--Test here-->
         <nunit2>
@@ -30,5 +29,11 @@
             <test assemblyname="${build.folder}\SqlMigration.Tests.dll" />
         </nunit2>
     </target>
+	
+	<target name="set_release">
+		<property name="build.target" value="release" />
+		<!--todo: this kinda sucks having to set this again... -->
+		<property name="build.folder" value="${root.folder}\build\${build.target}" />
+	</target>
     
 </project>
