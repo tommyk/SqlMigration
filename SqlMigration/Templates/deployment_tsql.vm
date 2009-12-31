@@ -1,0 +1,22 @@
+﻿BEGIN TRY
+BEGIN TRANSACTION SqlMigrationTransaction
+DECLARE @debug varchar(max);
+set @debug = 'Starting Migrations' + CHAR(13);
+#foreach($migration in $migrations)
+IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '$migration.ToString()') = 0
+BEGIN
+set @debug = @debug + CHAR(13) + 'Starting $migration.ToString()'
+#foreach($command in $migration.GetSqlCommands())
+exec ('$command.Replace("'", "''")')
+#end
+set @debug = @debug + CHAR(13) + 'Ending $migration.ToString()'
+INSERT INTO SqlMigration VALUES ('$migration.ToString()')
+END
+#end 
+COMMIT TRANSACTION SqlMigrationTransaction
+SELECT @debug as Tracing
+END TRY
+BEGIN CATCH
+SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;
+ROLLBACK TRANSACTION SqlMigrationTransaction
+END CATCH

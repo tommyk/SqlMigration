@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using Castle.Core.Logging;
+using Commons.Collections;
+using NVelocity;
+using NVelocity.App;
+using NVelocity.Runtime;
 
 namespace SqlMigration
 {
@@ -14,7 +17,6 @@ namespace SqlMigration
         private ILogger _logger = NullLogger.Instance;
 
         #region Constructors
-
 
         public DeploymentTask(Arguments arguments, IMigrationHelper migrationHelper, IFileIO fileIo)
             : base(arguments)
@@ -37,7 +39,6 @@ namespace SqlMigration
             /// 1. Get migrations neccessary to use (may need to filter on date)
             /// 2. loop over each one and each one of its commands and build up a file
 
-
             IList<Migration> migrations;
             string locationOfScripts = base.Arguments.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
 
@@ -47,54 +48,37 @@ namespace SqlMigration
             //get migrations
             migrations = _migrationHelper.GetMigrationsInOrder(locationOfScripts, includeTestData);
 
-
-            //build up the commands
-            var sb = new StringBuilder(2048 * migrations.Count);
-            //begin try and transaction 
-            sb.AppendLine("BEGIN TRY");
-            sb.AppendLine("BEGIN TRANSACTION SqlMigrationTransaction");
-            sb.AppendLine("DECLARE @debug varchar(max);");
-            sb.AppendLine("set @debug = 'Starting Migrations' + CHAR(13);");
-
-            foreach (Migration migration in migrations.OrderBy(migration => migration.MigrationDate))
-            {
-                //todo: use a logger instead
-                Logger.Debug(string.Format("Writing out migration {0}", migration));
-
-                //see if we need to run this migration
-                sb.AppendLine(string.Format("IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '{0}') = 0", migration));
-                sb.AppendLine("BEGIN");
-                sb.AppendLine("set @debug = @debug + CHAR(13) + 'Starting " + migration + "'");
-
-                var sqlCommands = migration.GetSqlCommands();
-
-                for (int i = 0; i < sqlCommands.Count; i++)
-                {
-                    string sqlCommand = sqlCommands[i];
-                    //add the command to the string builder
-                    sb.AppendLine("exec ('" + sqlCommand.Replace("'", "''") + "')");
-                }
-                //add debug statement
-                sb.AppendLine("set @debug = @debug + CHAR(13) + 'Ending " + migration + "'");
-
-                //insert the migratin name
-                sb.AppendLine(string.Format("INSERT INTO SqlMigration VALUES ('{0}')", migration));
-                sb.AppendLine("END");
-            }
-            //attempt to commit the transaction at the end of the script
-            sb.AppendLine("COMMIT TRANSACTION SqlMigrationTransaction");
-            sb.AppendLine("SELECT @debug as Tracing");
-            sb.AppendLine("END TRY");
-            sb.AppendLine("BEGIN CATCH");
-            sb.AppendLine("SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;");
-            sb.AppendLine("ROLLBACK TRANSACTION SqlMigrationTransaction");
-            sb.Append("END CATCH");
+            //load up a velocity engine and run the template through it...
+            string sqlOutput = CreateSqlOutput(migrations);
 
             //write file out
             string locationToCreateScript = base.Arguments.GetArgumentValue(TaskTypeConstants.DeploymentTask);
-            _fileIo.WriteFile(locationToCreateScript, sb.ToString());
+            _fileIo.WriteFile(locationToCreateScript, sqlOutput);
 
             return 0;
+        }
+
+        /// <summary>
+        /// Creates a velocity engine that is initiated.  It loads up
+        /// templates from the 'Templates' folder.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string CreateSqlOutput(IEnumerable<Migration> migrations)
+        {
+            VelocityEngine velocityEngine = new VelocityEngine();
+
+            ExtendedProperties extendedProperties = new ExtendedProperties();
+            extendedProperties.SetProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, AppDomain.CurrentDomain.BaseDirectory + "\\Templates");
+
+            velocityEngine.Init(extendedProperties);
+
+            var context = new VelocityContext();
+            context.Put("migrations", migrations.OrderBy(migration => migration.MigrationDate));
+
+            var stringWriter = new StringWriter();
+            velocityEngine.MergeTemplate("deployment_tsql.vm", "ISO-8859-1", context, stringWriter);
+
+            return stringWriter.GetStringBuilder().ToString();
         }
     }
 }
