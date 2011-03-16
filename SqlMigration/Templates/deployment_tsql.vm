@@ -10,7 +10,7 @@ set @debug = @debug + CHAR(13) + 'Starting $migration.ToString()'
 exec ('$command.Replace("'", "''")')
 #end
 set @debug = @debug + CHAR(13) + 'Ending $migration.ToString()'
-INSERT INTO SqlMigration VALUES ('$migration.ToString()')
+INSERT INTO SqlMigration (Name) VALUES ('$migration.ToString()')
 END
 #end 
 COMMIT TRANSACTION SqlMigrationTransaction
