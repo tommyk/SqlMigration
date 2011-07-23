@@ -98,32 +98,32 @@ namespace Tests
             }
         }
 
-        //[Test]
-        //public void mock_two_migrations_NOT_running_under_a_transaction()
-        //{
-        //    //setup fake migrations
-        //    var migrations = new List<Migration>();
-        //    migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
-        //    migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
+        [Test]
+        public void run_sql_test()
+        {
+            using (_mock.Record())
+            {
+                //hand our mocked command in with the CreateCommand method
+                Expect.Call(_iConnection.CreateCommand())
+                    .Return(_iCommand);
 
-        //    using (_mock.Record())
-        //    {
-        //        //hand our mocked command in with the CreateCommand method
-        //        Expect.Call(_iConnection.CreateCommand())
-        //            .Return(_iCommand);
+                //hand in our mocked transaction
+                Expect.Call(_iConnection.BeginTransaction())
+                    .Return(_iTransaction);
 
-        //        //make sure it hits the db with the command
-        //        Expect.Call(_iCommand.ExecuteNonQuery())
-        //            .Repeat.Times(2)
-        //            .Return(0);
-        //    }
-        //    using (_mock.Playback())
-        //    {
-        //        var sqlRunner = new SqlRunner(_iConnection, _iTransaction);
-        //        sqlRunner.ConnectionString = string.Empty;
-        //        sqlRunner.StartMigrations(migrations, false);
-        //    }
-        //}
-
+                //make sure it hits the db with the command
+                Expect.Call(_iCommand.CommandText).SetPropertyAndIgnoreArgument();
+                Expect.Call(_iCommand.ExecuteNonQuery())
+                    .IgnoreArguments()
+                    .Repeat.Times(1) //only once
+                    .Return(0);
+            }
+            using (_mock.Playback())
+            {
+                var sqlRunner = new SqlRunner(_iConnection);
+                sqlRunner.ConnectionString = string.Empty;
+                sqlRunner.RunSql("sql_string", true);
+            }
+        }
     }
 }

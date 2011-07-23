@@ -26,13 +26,68 @@ namespace SqlMigration
             get { return _connection.ConnectionString; }
             set { _connection.ConnectionString = value; }
         }
-
+       
         public ILogger Logger
         {
             get { return _logger; }
             set { _logger = value; }
         }
 
+        /// <summary>
+        /// Just used to run a peice of SQL.
+        /// </summary>
+        /// <param name="sqlToRun"></param>
+        /// <param name="runInsideTransaction"></param>
+        /// <returns></returns>
+        public int RunSql(string sqlToRun, bool runInsideTransaction)
+        {
+            //setup command to be reused 
+            IDbCommand command = null;
+            IDbTransaction transaction = null;
+
+            int success = -1;
+            try
+            {
+                //create a connection to database
+                _connection.Open();
+
+                //START TRANSACTION
+                if (runInsideTransaction)
+                    transaction = _connection.BeginTransaction();
+
+                //create sql command object
+                command = _connection.CreateCommand();
+                command.CommandText = sqlToRun;
+                command.ExecuteNonQuery();
+
+                //commit transaction if we are running under one
+                if (runInsideTransaction)
+                {
+                    Logger.Debug("Before Commit");
+                    transaction.Commit();
+                    Logger.Debug("After Commit");
+                }
+
+                //mark success
+                success = 0;
+            }
+            catch (Exception e)
+            {
+                WriteOutAllExcpetionInformation(e, Logger);
+            }
+            finally
+            {
+                if (_connection != null)
+                {
+                    Logger.Debug("Closing connection...");
+                    _connection.Close();
+                    _connection.Dispose();
+                    Logger.Debug("Done closing connection");
+                }
+            }
+
+            return success;
+        }
 
         public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction, bool trackMigrations)
         {

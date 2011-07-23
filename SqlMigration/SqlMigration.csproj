@@ -79,7 +79,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Arguments.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="ArgumentConstants.cs" />
     <Compile Include="Contracts\IFileIO.cs" />
     <Compile Include="MigrationHelper.cs" />
     <Compile Include="FileIO.cs" />
@@ -89,10 +89,11 @@
     <Compile Include="IoC.cs" />
     <Compile Include="Factory\MigrationFactory.cs" />
     <Compile Include="Factory\MigrationTypeFactory.cs" />
+    <Compile Include="TaskTypeConstants.cs" />
     <Compile Include="TSqlMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Contracts\ISqlRunner.cs" />
-    <Compile Include="SqlRunner\SqlRunner.cs" />
+    <Compile Include="SqlRunner.cs" />
     <Compile Include="Tasks\DeploymentTask.cs" />
     <Compile Include="Contracts\MigrationTask.cs" />
     <Compile Include="Tasks\MigrateDatabaseForwardTask.cs" />

@@ -37,6 +37,7 @@ namespace Tests
         [Test]
         public void create_deploy_script_on_all_migrations()
         {
+            Assert.Fail("This needs updated to test less. It wants an EXACT copy of output TSQL.");
             //argument stuff
             string scriptDirectory = "c:\test";
             string locationToDeploy = @"a:\test";
@@ -76,7 +77,6 @@ SELECT @debug as Tracing
 END TRY
 BEGIN CATCH
 SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;
-ROLLBACK TRANSACTION SqlMigrationTransaction
 END CATCH";
 
 
