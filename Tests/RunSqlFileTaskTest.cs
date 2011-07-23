@@ -25,34 +25,22 @@ namespace Tests
             var connectionString = "asdfasdf";
             string filePath = @"A:\test.sql";
             string sqlFileContents = "create table asdf()";
-            var migrationHelper = MockRepository.GenerateMock<IMigrationHelper>();
-            var dbConnection = MockRepository.GenerateMock<IDbConnection>();
-            var transaction = MockRepository.GenerateMock<IDbTransaction>();
-            var command = MockRepository.GenerateMock<IDbCommand>();
+            var sqlRunner = MockRepository.GenerateMock<ISqlRunner>();
             var fileIo = MockRepository.GenerateMock<IFileIO>();
-            
-            var args = new Arguments(new[] {TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.ConnectionStringArg, connectionString});
+
+            var args = new Arguments(new[] { TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.ConnectionStringArg, connectionString });
 
             //Arrange
 
             //get file contents...
             fileIo.Stub(io => io.ReadConentsOfFile(filePath)).Return(sqlFileContents);
 
-            //transaction
-            dbConnection.Stub(connection => connection.BeginTransaction()).Return(transaction);
-
-            //create command
-            dbConnection.Stub(connection => connection.CreateCommand()).Return(command);
-
-
             //Act
-            var runSqlFileTask = new RunSqlFileTask(args, migrationHelper, dbConnection, fileIo);
+            var runSqlFileTask = new RunSqlFileTask(args, fileIo, sqlRunner);
             int success = runSqlFileTask.RunTask();
 
             //Assert
-            command.AssertWasCalled(dbCommand => dbCommand.ExecuteNonQuery());
-            transaction.AssertWasCalled(dbTransaction => dbTransaction.Commit());
-            dbConnection.AssertWasCalled(connection => connection.ConnectionString = connectionString);
+            sqlRunner.AssertWasCalled(x=>x.RunSql(sqlFileContents, true));
             Assert.That(success, Is.EqualTo(0));
         }
     }
