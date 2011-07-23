@@ -112,6 +112,7 @@ namespace Tests
                     .Return(_iTransaction);
 
                 //make sure it hits the db with the command
+                Expect.Call(_iCommand.Transaction).SetPropertyAndIgnoreArgument();
                 Expect.Call(_iCommand.CommandText).SetPropertyAndIgnoreArgument();
                 Expect.Call(_iCommand.ExecuteNonQuery())
                     .IgnoreArguments()

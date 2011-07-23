@@ -51,12 +51,16 @@ namespace SqlMigration
                 //create a connection to database
                 _connection.Open();
 
-                //START TRANSACTION
-                if (runInsideTransaction)
-                    transaction = _connection.BeginTransaction();
-
                 //create sql command object
                 command = _connection.CreateCommand();
+                //START TRANSACTION
+                if (runInsideTransaction)
+                {
+                    transaction = _connection.BeginTransaction();
+                    command.Transaction = transaction;
+                }
+
+
                 command.CommandText = sqlToRun;
                 command.ExecuteNonQuery();
 

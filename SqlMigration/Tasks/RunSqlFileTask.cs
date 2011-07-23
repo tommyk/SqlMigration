@@ -38,6 +38,7 @@ namespace SqlMigration
             //run inside transaction?
             bool runInsideTransaction = !Arguments.DoesArgumentExist(ArgumentConstants.RunWithoutTransactionArg);
 
+            _sqlRunner.ConnectionString = connectionString;
             return _sqlRunner.RunSql(sqlCommand, runInsideTransaction);
         }
 

@@ -40,6 +40,7 @@ namespace Tests
             int success = runSqlFileTask.RunTask();
 
             //Assert
+            sqlRunner.AssertWasCalled(x => x.ConnectionString = connectionString);
             sqlRunner.AssertWasCalled(x=>x.RunSql(sqlFileContents, true));
             Assert.That(success, Is.EqualTo(0));
         }
