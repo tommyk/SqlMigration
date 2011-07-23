@@ -8,7 +8,7 @@ using NVelocity;
 using NVelocity.App;
 using NVelocity.Runtime;
 
-namespace SqlMigration
+namespace SqlMigration.Tasks
 {
     public class DeploymentTask : MigrationTask
     {

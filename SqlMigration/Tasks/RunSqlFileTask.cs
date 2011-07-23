@@ -1,9 +1,6 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using Castle.Core.Logging;
+﻿using Castle.Core.Logging;
 
-namespace SqlMigration
+namespace SqlMigration.Tasks
 {
     public class RunSqlFileTask : MigrationTask
     {
@@ -40,16 +37,6 @@ namespace SqlMigration
 
             _sqlRunner.ConnectionString = connectionString;
             return _sqlRunner.RunSql(sqlCommand, runInsideTransaction);
-        }
-
-        private static void WriteOutAllExcpetionInformation(Exception e, ILogger logger)
-        {
-            if (e != null)
-            {
-                logger.Error(e.Message);
-                if (e.InnerException != null)
-                    WriteOutAllExcpetionInformation(e.InnerException, logger);
-            }
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace SqlMigration
+namespace SqlMigration.Tasks
 {
     public class MigrateDatabaseForwardTask : MigrationTask
     {

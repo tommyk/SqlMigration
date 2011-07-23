@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using SqlMigration;
+using SqlMigration.Tasks;
 
 namespace Tests
 {

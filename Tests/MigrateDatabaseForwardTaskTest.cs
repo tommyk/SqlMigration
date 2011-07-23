@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using SqlMigration;
+using SqlMigration.Tasks;
 
 
 namespace Tests
