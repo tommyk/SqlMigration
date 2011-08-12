@@ -14,7 +14,7 @@ namespace SqlMigration
 
     public class Arguments
     {
-        private readonly string[] _arguments;
+        private readonly List<string> _arguments;
 
         #region Constructors
 
@@ -23,11 +23,11 @@ namespace SqlMigration
             if (arguments == null || arguments.Length == 0)
                 throw new ArgumentException("Must atleast provide a TaskType");
 
-            _arguments = arguments;
+            _arguments = new List<string>(arguments);
         }
         #endregion
 
-        public string[] CommandArguments
+        public IList<string> CommandArguments
         {
             get { return _arguments; }
         }
@@ -52,13 +52,13 @@ namespace SqlMigration
             string argValue = null;
 
             //try to find flag, then get next arg
-            for (int i = 0; i < _arguments.Length; i++)
+            for (int i = 0; i < _arguments.Count; i++)
             {
                 string args = _arguments[i];
                 if (args == flagToFind)
                 {
                     //make sure we don't go over length
-                    if ((i + 1) != _arguments.Length)
+                    if ((i + 1) != _arguments.Count)
                     {
                         argValue = _arguments[i + 1];
                         break;

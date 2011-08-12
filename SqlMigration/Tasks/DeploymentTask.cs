@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Logging;
 using Commons.Collections;
 using NVelocity;
 using NVelocity.App;
@@ -14,7 +13,6 @@ namespace SqlMigration.Tasks
     {
         private readonly IMigrationHelper _migrationHelper;
         private readonly IFileIO _fileIo;
-        private ILogger _logger = NullLogger.Instance;
 
         #region Constructors
 
@@ -26,12 +24,6 @@ namespace SqlMigration.Tasks
         }
 
         #endregion
-
-        public ILogger Logger
-        {
-            get { return _logger; }
-            set { _logger = value; }
-        }
 
         public override int RunTask()
         {

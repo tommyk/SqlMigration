@@ -22,4 +22,4 @@ BEGIN CATCH
     SET @errorMessage = ERROR_MESSAGE();
 END CATCH
 
-SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;
+SELECT @errorNumber as ErrorNumber, @errorMessage as ErrorMessage, @debug as Tracing;

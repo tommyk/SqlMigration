@@ -53,6 +53,7 @@ namespace SqlMigration
 
                 //create sql command object
                 command = _connection.CreateCommand();
+                command.CommandTimeout = 60; //todo: remove hard coded value
                 //START TRANSACTION
                 if (runInsideTransaction)
                 {
@@ -62,7 +63,24 @@ namespace SqlMigration
 
 
                 command.CommandText = sqlToRun;
-                command.ExecuteNonQuery();
+                IDataReader executeReader = command.ExecuteReader(CommandBehavior.SingleResult);
+                //expecting back a single row with 'ErrorNumber', 'ErrorMessage', and 'Tracing'
+                executeReader.Read();
+                int errorNumber = 0;
+                if (!executeReader.IsDBNull(executeReader.GetOrdinal("ErrorNumber")))
+                {
+                    executeReader.GetInt32(executeReader.GetOrdinal("ErrorNumber"));
+                }
+                if(errorNumber != 0)
+                {
+                    var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
+                    var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
+                    Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
+                    Logger.Fatal(string.Format("Message: {0}", errorMessage));
+                    Logger.Fatal(string.Format("Tracing: {0}", tracing));
+                    return -1;
+                }
+
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
@@ -92,7 +110,7 @@ namespace SqlMigration
 
             return success;
         }
-
+        [Obsolete]
         public int StartMigrations(IList<Migration> migrations, bool runInsideTransaction, bool trackMigrations)
         {
             //setup command to be reused 

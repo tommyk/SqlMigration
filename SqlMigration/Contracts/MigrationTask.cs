@@ -1,7 +1,10 @@
-﻿namespace SqlMigration
+﻿using Castle.Core.Logging;
+
+namespace SqlMigration
 {
     public abstract class MigrationTask
     {
+        private ILogger _logger = NullLogger.Instance;
         private readonly Arguments _arguments;
 
         protected MigrationTask(Arguments arguments)
@@ -18,5 +21,11 @@
         public string TaskType { get; set; }
 
         public abstract int RunTask();
+
+        public ILogger Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
+        }
     }
 }
