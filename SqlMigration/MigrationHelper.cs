@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SqlMigration.Contracts;
+using SqlMigration.Factories;
 
 namespace SqlMigration
 {
     public class MigrationHelper : IMigrationHelper
     {
-        private readonly IFileIO _fileOperationsWrapper;
-
-        public MigrationHelper(IFileIO fileWrapper)
+        private IFileIO FileIO
         {
-            _fileOperationsWrapper = fileWrapper;
+            get { return Factory.Get<IFileIO>(); }
         }
-
 
         public IList<Migration> GetMigrationsInOrder(string directoryOfScripts, bool includeTestScripts)
         {
@@ -27,10 +26,10 @@ namespace SqlMigration
             var fileNames = new List<string>();
 
             //grab files
-            fileNames.AddRange(_fileOperationsWrapper.ReadDirectoryFilenames(directoryOfScripts));
+            fileNames.AddRange(FileIO.ReadDirectoryFilenames(directoryOfScripts));
             //grab test files?
             if (includeTestScripts)
-                fileNames.AddRange(_fileOperationsWrapper.ReadDirectoryFilenames(directoryOfScripts + "\\test"));
+                fileNames.AddRange(FileIO.ReadDirectoryFilenames(directoryOfScripts + "\\test"));
 
             //add to migrations
             var migrations = new List<Migration>();

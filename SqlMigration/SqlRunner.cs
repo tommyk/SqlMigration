@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Data.SqlClient;
 using Castle.Core.Logging;
+using SqlMigration.Contracts;
 
 
 namespace SqlMigration
@@ -11,20 +12,18 @@ namespace SqlMigration
     public class SqlRunner : ISqlRunner
     {
         private const string SqlmigrationTableName = "SqlMigration";
-        private readonly IDbConnection _connection;
         private ILogger _logger = NullLogger.Instance;
 
 
-        public SqlRunner(IDbConnection connection)
+        public IDbConnection Connection
         {
-            if (connection == null) throw new ArgumentNullException("Connection must not be null");
-            _connection = connection;
+            get { return Factory.Get<IDbConnection>(); }
         }
 
         public string ConnectionString
         {
-            get { return _connection.ConnectionString; }
-            set { _connection.ConnectionString = value; }
+            get { return Connection.ConnectionString; }
+            set { Connection.ConnectionString = value; }
         }
        
         public ILogger Logger
@@ -49,15 +48,15 @@ namespace SqlMigration
             try
             {
                 //create a connection to database
-                _connection.Open();
+                Connection.Open();
 
                 //create sql command object
-                command = _connection.CreateCommand();
+                command = Connection.CreateCommand();
                 command.CommandTimeout = 60; //todo: remove hard coded value
                 //START TRANSACTION
                 if (runInsideTransaction)
                 {
-                    transaction = _connection.BeginTransaction();
+                    transaction = Connection.BeginTransaction();
                     command.Transaction = transaction;
                 }
 
@@ -99,11 +98,11 @@ namespace SqlMigration
             }
             finally
             {
-                if (_connection != null)
+                if (Connection != null)
                 {
                     Logger.Debug("Closing connection...");
-                    _connection.Close();
-                    _connection.Dispose();
+                    Connection.Close();
+                    Connection.Dispose();
                     Logger.Debug("Done closing connection");
                 }
             }
@@ -121,15 +120,15 @@ namespace SqlMigration
             try
             {
                 //create a connection to database
-                _connection.Open();
+                Connection.Open();
 
                 //START TRANSACTION
                 if (runInsideTransaction)
-                    transaction = _connection.BeginTransaction();
+                    transaction = Connection.BeginTransaction();
 
                 //create sql command object
-                command = _connection.CreateCommand();
-                command.Connection = _connection;
+                command = Connection.CreateCommand();
+                command.Connection = Connection;
 
                 //hook into transaction
                 if (runInsideTransaction)
@@ -195,10 +194,10 @@ namespace SqlMigration
             }
             finally
             {
-                if (_connection != null)
+                if (Connection != null)
                 {
                     Logger.Debug("Closing connection...");
-                    _connection.Close();
+                    Connection.Close();
                     Logger.Debug("Done closing connection");
                 }
             }

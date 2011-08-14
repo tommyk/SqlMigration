@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Logging;
+using SqlMigration.Contracts;
 
 namespace SqlMigration.Tasks
 {

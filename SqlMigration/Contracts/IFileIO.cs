@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SqlMigration
+namespace SqlMigration.Contracts
 {
     public interface IFileIO
     {

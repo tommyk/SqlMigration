@@ -1,10 +1,11 @@
 ﻿using System;
+using SqlMigration.Contracts;
 
-namespace SqlMigration
+namespace SqlMigration.Factories
 {
-    public class MigrationTaskFactory
+    public class MigrationTaskFactory : IMigrationTaskFactory
     {
-        public static MigrationTask GetMigrationTaskByTaskType(Arguments args)
+        public MigrationTask GetMigrationTaskByTaskType(Arguments args)
         {
             MigrationTask task = null;
 

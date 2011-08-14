@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using SqlMigration;
+using SqlMigration.Contracts;
 using SqlMigration.Tasks;
 
 
@@ -22,10 +23,6 @@ namespace Tests
         [Test]
         public void run_task_wihtout_running_inside_transaction()
         {
-            var mock = new Rhino.Mocks.MockRepository();
-            var fileIO = mock.DynamicMock<IMigrationHelper>();
-            var sqlRunner = mock.DynamicMock<ISqlRunner>();
-
             //migrations
             var migartions = new List<Migration>();
             //connection string
@@ -33,22 +30,34 @@ namespace Tests
             //make arguments file
             var args = new Arguments(new string[] {ArgumentConstants.ConnectionStringArg, connectionString, ArgumentConstants.RunWithoutTransactionArg});
 
-
+            var mock = new Rhino.Mocks.MockRepository();
+            var fileIO = mock.DynamicMock<IFileIO>().OverloadFactory();
+            var sqlRunner = mock.DynamicMock<ISqlRunner>().OverloadFactory();
+            var migrationTaskFactory = mock.DynamicMock<IMigrationTaskFactory>().OverloadFactory();
+            var migrationTask = mock.Stub<MigrationTask>(new[] {args});
+            
 
             using (mock.Record())
             {
-                //expect to try and grab migrations
-                Expect.Call(fileIO.GetMigrationsInOrder(null, true))
+                //create sql script
+                Expect.Call(migrationTaskFactory.GetMigrationTaskByTaskType(null))
                     .IgnoreArguments()
-                    .Return(migartions);
+                    .Return(migrationTask);
+                Expect.Call(migrationTask.RunTask()).Return(0);
 
-                //expect call to sql runner and return 0 for success
-                Expect.Call(sqlRunner.StartMigrations(migartions, false, true))
+                //get text for sql
+                Expect.Call(fileIO.ReadConentsOfFile(null))
+                    .IgnoreArguments()
+                    .Return("test sql");
+
+                //call sqlrunner
+                Expect.Call(sqlRunner.ConnectionString).SetPropertyAndIgnoreArgument();
+                Expect.Call(sqlRunner.RunSql("test sql", false))
                     .Return(0);
             }
             using (mock.Playback())
             {
-                var runSqlTask = new MigrateDatabaseForwardTask(args, fileIO, sqlRunner);
+                var runSqlTask = new MigrateDatabaseForwardTask(args);
                 int success = runSqlTask.RunTask();
 
                 Assert.AreEqual(0, success, "we should get 0 reuslting in a success");

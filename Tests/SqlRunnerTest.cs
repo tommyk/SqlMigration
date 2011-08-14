@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using SqlMigration;
 
 using System.Collections.Generic;
+using SqlMigration.Contracts;
 
 namespace Tests
 {
@@ -33,8 +34,12 @@ namespace Tests
             _iTransaction = _mock.DynamicMock<IDbTransaction>();
             _dataReader = _mock.DynamicMock<IDataReader>();
         }
-
-
+        
+        [TearDown]
+        public void TearDown()
+        {
+            Factory.Overrides.Clear();
+        }
 
         /// <summary>
         ///A test for StartMigrations
@@ -92,7 +97,8 @@ namespace Tests
             }
             using(_mock.Playback())
             {
-                var sqlRunner = new SqlRunner(_iConnection);
+                Factory.Overrides.Add(typeof(IDbConnection).FullName, _iConnection);
+                var sqlRunner = new SqlRunner();
                 sqlRunner.ConnectionString = string.Empty;
                 sqlRunner.StartMigrations(migrations, true, true);
             }
@@ -114,14 +120,24 @@ namespace Tests
                 //make sure it hits the db with the command
                 Expect.Call(_iCommand.Transaction).SetPropertyAndIgnoreArgument();
                 Expect.Call(_iCommand.CommandText).SetPropertyAndIgnoreArgument();
-                Expect.Call(_iCommand.ExecuteNonQuery())
-                    .IgnoreArguments()
-                    .Repeat.Times(1) //only once
-                    .Return(0);
+                Expect.Call(_iCommand.CommandTimeout).SetPropertyAndIgnoreArgument();
+                //Expect.Call(_iCommand.ExecuteNonQuery())
+                //    .IgnoreArguments()
+                //    .Repeat.Times(1) //only once
+                //    .Return(0);
+                Expect.Call(_iCommand.ExecuteReader(CommandBehavior.SingleResult))
+                    .Return(_dataReader);
+
+                Expect.Call(_dataReader.Read()).Return(true);
+                Expect.Call(_dataReader.GetOrdinal("ErrorNumber")).Return(0);
+                Expect.Call(_dataReader.IsDBNull(0)).Return(false);
+                Expect.Call(_dataReader.GetInt32(0)).Return(0);
+
             }
             using (_mock.Playback())
             {
-                var sqlRunner = new SqlRunner(_iConnection);
+                Factory.Overrides.Add(typeof(IDbConnection).FullName, _iConnection);
+                var sqlRunner = new SqlRunner();
                 sqlRunner.ConnectionString = string.Empty;
                 sqlRunner.RunSql("sql_string", true);
             }

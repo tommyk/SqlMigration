@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SqlMigration;
 
 using System;
+using SqlMigration.Contracts;
 
 namespace Tests
 {

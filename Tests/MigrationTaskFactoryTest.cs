@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using SqlMigration;
+using SqlMigration.Contracts;
+using SqlMigration.Factories;
 
 namespace Tests
 {
@@ -28,7 +30,7 @@ namespace Tests
         private void RunTestCode(string commandTask)
         {
             var args = new Arguments(new[] { commandTask });
-            Assert.That(MigrationTaskFactory.GetMigrationTaskByTaskType(args), Is.Not.Null);
+            Assert.That(Factory.Get<IMigrationTaskFactory>().GetMigrationTaskByTaskType(args), Is.Not.Null);
         }
     }
 }

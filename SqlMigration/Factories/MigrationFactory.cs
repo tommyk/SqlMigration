@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Text;
+using SqlMigration.Contracts;
 
-namespace SqlMigration
+namespace SqlMigration.Factories
 {
     public class MigrationFactory
     {

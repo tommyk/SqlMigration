@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SqlMigration.Contracts;
 
 namespace SqlMigration.Runner
 {
@@ -20,7 +18,7 @@ namespace SqlMigration.Runner
                 Arguments arguments = new Arguments(args);
 
                 //setup a task and run it
-                MigrationTask task = MigrationTaskFactory.GetMigrationTaskByTaskType(arguments);
+                MigrationTask task = Factory.Get<IMigrationTaskFactory>().GetMigrationTaskByTaskType(arguments);
 
                 returnValue = task.RunTask();
             }

@@ -6,6 +6,7 @@ using Commons.Collections;
 using NVelocity;
 using NVelocity.App;
 using NVelocity.Runtime;
+using SqlMigration.Contracts;
 
 namespace SqlMigration.Tasks
 {

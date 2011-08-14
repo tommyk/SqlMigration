@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SqlMigration.Tasks;
 
-namespace SqlMigration
+namespace SqlMigration.Factories
 {
+    //todo: move this classes functionality into MigrationTaskFactory. They should be just once factory.
     public static class TaskTypeFactory
     {
         /* Setup the intial values we have in our own codebase.  

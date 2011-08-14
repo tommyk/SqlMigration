@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SqlMigration.Contracts;
+using SqlMigration.Factories;
 
 namespace SqlMigration.Tasks
 {
@@ -11,19 +13,25 @@ namespace SqlMigration.Tasks
     /// </summary>
     public class MigrateDatabaseForwardTask : MigrationTask
     {
-        private readonly IMigrationHelper _migrationHelper;
-        private readonly ISqlRunner _sqlRunner;
-
-        #region Constructors
-
-        public MigrateDatabaseForwardTask(Arguments arguments, IMigrationHelper migrationHelper, ISqlRunner sqlRunner)
-            : base(arguments)
+        private ISqlRunner SqlRunner
         {
-            _migrationHelper = migrationHelper;
-            _sqlRunner = sqlRunner;
+            get { return Factory.Get<ISqlRunner>(); }
         }
 
-        #endregion
+        public IMigrationTaskFactory MigrationTaskFactory
+        {
+            get { return Factory.Get<IMigrationTaskFactory>(); }
+        }
+
+        public IFileIO FileIO
+        {
+            get { return Factory.Get<IFileIO>(); }
+        }
+
+        public MigrateDatabaseForwardTask(Arguments arguments)
+            : base(arguments)
+        {
+        }
 
         public override int RunTask()
         {
@@ -39,29 +47,9 @@ namespace SqlMigration.Tasks
 
             Logger.Info(string.Format("About to run SQL file located at {0}", fileName));
 
-            _sqlRunner.ConnectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);
-            return _sqlRunner.RunSql(File.ReadAllText(fileName), false);
-            //int success = -1;
-
-            ////grab migrations
-            //string scriptDirectory = Arguments.GetArgumentValue(ArgumentConstants.ScriptDirectoryArg);
-            ////make it look for a flag to include test data
-            //bool includeTestData = Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
-            //IList<Migration> migartions = _migrationHelper.GetMigrationsInOrder(scriptDirectory, includeTestData); 
-
-
-            ////grab connection string
-            //string connectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);
-            //_sqlRunner.ConnectionString = connectionString;
-
-            ////find if we want to run inside transaction...
-            //bool runInsideTransaction = !base.Arguments.DoesArgumentExist(ArgumentConstants.RunWithoutTransactionArg);
-
-            ////run the migrations
-            //int successRunningSql = _sqlRunner.StartMigrations(migartions, runInsideTransaction, true); 
-            //success = successRunningSql;
-
-            //return success;
+            SqlRunner.ConnectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);
+            //return SqlRunner.RunSql(File.ReadAllText(fileName), false);
+            return SqlRunner.RunSql(FileIO.ReadConentsOfFile(fileName), false);
         }
     }
 }

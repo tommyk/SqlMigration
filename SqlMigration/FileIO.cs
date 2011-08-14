@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Castle.Core.Logging;
+using SqlMigration.Contracts;
 
 namespace SqlMigration
 {

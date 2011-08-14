@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SqlMigration
+namespace SqlMigration.Contracts
 {
     public interface ISqlRunner
     {

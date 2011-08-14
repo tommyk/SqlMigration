@@ -1,6 +1,6 @@
 ﻿using Castle.Core.Logging;
 
-namespace SqlMigration
+namespace SqlMigration.Contracts
 {
     public abstract class MigrationTask
     {

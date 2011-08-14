@@ -4,6 +4,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SqlMigration;
+using SqlMigration.Contracts;
 using SqlMigration.Tasks;
 
 

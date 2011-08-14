@@ -9,6 +9,7 @@ using Rhino.Mocks;
 using SqlMigration;
 
 using System.Collections.Generic;
+using SqlMigration.Contracts;
 
 namespace Tests
 {
@@ -19,7 +20,24 @@ namespace Tests
     [TestFixture]
     public class MigrationHelperTest : BaseTestClass
     {
+        private MockRepository _mock;
+        private IFileIO _fileWrapper;
 
+        [SetUp]
+        public void Setup()
+        {
+            Factory.Overrides.Clear();
+
+            _mock = new MockRepository();
+            _fileWrapper = _mock.DynamicMock<IFileIO>();
+            Factory.Overrides.Add(typeof(IFileIO).FullName, _fileWrapper);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Factory.Overrides.Clear();
+        }
         //[TestFixtureSetUp]
         //public void TestSetup()
         //{
@@ -32,9 +50,6 @@ namespace Tests
         [Test]
         public void mock_files_and_make_sure_they_come_back_in_order()
         {
-            var mock = new MockRepository();
-            var fileWrapper = mock.DynamicMock<IFileIO>();
-
             //fake dates to test against
             var firstDate = DateTime.Parse("1/1/2008 1:11:00");
             var secondDate = DateTime.Parse("1/1/2008 1:12:00");
@@ -57,15 +72,15 @@ namespace Tests
                 fileNames.Add("a:\\test\\" + MakeMigrationFileNameFromDate(date, "does_not_matter"));
             }
 
-            using (mock.Record())
+            using (_mock.Record())
             {
                 //pass back fake migration files
-                Expect.Call(fileWrapper.ReadDirectoryFilenames("a:\\test"))
+                Expect.Call(_fileWrapper.ReadDirectoryFilenames("a:\\test"))
                     .Return(fileNames);
             }
-            using (mock.Playback())
+            using (_mock.Playback())
             {
-                var fileIO = new MigrationHelper(fileWrapper);
+                var fileIO = new MigrationHelper();
                 IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
@@ -88,9 +103,6 @@ namespace Tests
         [Test]
         public void GetMigrationsInOrderTest()
         {
-            var mock = new MockRepository();
-            var fileWrapper = mock.DynamicMock<IFileIO>();
-
             //fake dates to test against
             var firstDate = DateTime.Parse("1/1/2008 1:11:00");
             var secondDate = DateTime.Parse("1/1/2008 1:12:00");
@@ -113,16 +125,16 @@ namespace Tests
                 fileNames.Add("a:\\test\\" + MakeMigrationFileNameFromDate(date, "does_not_matter"));
             }
 
-            using (mock.Record())
+            using (_mock.Record())
             {
                 //pass back fake migration files
-                Expect.Call(fileWrapper.ReadDirectoryFilenames("a:\\test"))
+                Expect.Call(_fileWrapper.ReadDirectoryFilenames("a:\\test"))
                     .Return(fileNames);
             }
-            using (mock.Playback())
+            using (_mock.Playback())
             {
-                var fileIO = new MigrationHelper(fileWrapper);
-                IList<Migration> migrationsInOrder = fileIO.GetMigrationsInOrder("a:\\test", false, secondDate);
+                var migrationHelper = new MigrationHelper();
+                IList<Migration> migrationsInOrder = migrationHelper.GetMigrationsInOrder("a:\\test", false, secondDate);
 
                 Assert.IsNotNull(migrationsInOrder, "Migration list came back null");
                 Assert.AreEqual(4, migrationsInOrder.Count, "Should be 4 since we filtered one out");
