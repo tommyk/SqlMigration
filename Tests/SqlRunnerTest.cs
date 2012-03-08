@@ -1,11 +1,8 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SqlMigration;
-
-using System.Collections.Generic;
-using SqlMigration.Contracts;
 
 namespace Tests
 {
@@ -16,7 +13,6 @@ namespace Tests
     [TestFixture]
     public class SqlRunnerTest
     {
-        private MockRepository _mock;
         private IDbConnection _iConnection;
         private IDbCommand _iCommand;
         private IDbTransaction _iTransaction;
@@ -27,120 +23,94 @@ namespace Tests
         [SetUp]
         public void MyTestInitialize()
         {
-            //setup mocks
-            _mock = new MockRepository();
-            _iConnection = _mock.DynamicMock<IDbConnection>();
-            _iCommand = _mock.StrictMock<IDbCommand>();
-            _iTransaction = _mock.DynamicMock<IDbTransaction>();
-            _dataReader = _mock.DynamicMock<IDataReader>();
+            _iConnection = MockRepository.GenerateMock<IDbConnection>().OverloadFactory();
+            _iCommand = MockRepository.GenerateMock<IDbCommand>();
+            _iTransaction = MockRepository.GenerateMock<IDbTransaction>();
+            _dataReader = MockRepository.GenerateMock<IDataReader>();
+
+            //create command
+            _iConnection.Stub(connection => connection.CreateCommand())
+                .Return(_iCommand);
         }
-        
+
         [TearDown]
         public void TearDown()
         {
             Factory.Overrides.Clear();
         }
 
+        [Test]
+        public void use_transaction_get_no_error()
+        {
+            //setup transaction
+            _iConnection.Stub(dbConnection => dbConnection.BeginTransaction())
+                .Return(_iTransaction);
+
+            //setup reader and pass back
+            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.SingleResult)).Return(_dataReader);
+            //setup the reader
+            SetupDataReader(0, false);
+
+            var sqlRunner = new SqlRunner();
+            sqlRunner.ConnectionString = string.Empty;
+            int sucess = sqlRunner.RunSql("sql_string", true);
+
+            Assert.That(sucess, Is.EqualTo(0));
+
+            _iConnection.AssertWasCalled(connection1 => connection1.BeginTransaction());
+            _iTransaction.AssertWasCalled(transaction => transaction.Commit());
+        }
+
+        [Test]
+        public void no_transaction_get_no_error()
+        {
+            //setup reader and pass back
+            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.SingleResult)).Return(_dataReader);
+
+            //setup reader
+            SetupDataReader(0, false);
+
+            var sqlRunner = new SqlRunner();
+            sqlRunner.ConnectionString = string.Empty;
+            int sucess = sqlRunner.RunSql("sql_string", false);
+
+            Assert.That(sucess, Is.EqualTo(0));
+
+            _iConnection.AssertWasNotCalled(connection1 => connection1.BeginTransaction());
+            _iTransaction.AssertWasNotCalled(transaction => transaction.Commit());
+        }
+
+        [Test]
+        public void error_returned_no_transaction()
+        {
+            //setup reader and pass back
+            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.SingleResult)).Return(_dataReader);
+
+            //setup reader
+            SetupDataReader(110, false);
+
+            var sqlRunner = new SqlRunner();
+            sqlRunner.ConnectionString = string.Empty;
+            int sucess = sqlRunner.RunSql("sql_string", false);
+
+            Assert.That(sucess, Is.EqualTo(-1));
+
+            _iConnection.AssertWasNotCalled(connection1 => connection1.BeginTransaction());
+            _iTransaction.AssertWasNotCalled(transaction => transaction.Commit());
+        }
+
         /// <summary>
-        ///A test for StartMigrations
-        ///</summary>
-        [Test]
-        public void mock_running_two_fake_sql_file_with_no_errors()
+        /// Helper method to setup the mocked data reader
+        /// </summary>
+        private void SetupDataReader(int errorNumberToReturn, bool isErrorNumberNull)
         {
-            //setup fake migrations
-            var migrations = new List<Migration>();
-            migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/1/2000")));
-            migrations.Add(MigrationHelperTest.CreateMigrationObject(DateTime.Parse("1/2/2000")));
-
-            using(_mock.Record())
-            {
-                //hand our mocked command in with the CreateCommand method
-                Expect.Call(_iConnection.CreateCommand())
-                    .Return(_iCommand);
-
-                //hand in our mocked transaction
-                Expect.Call(_iConnection.BeginTransaction())
-                    .Return(_iTransaction);
-
-                //make sure it hits the db with the command
-                Expect.Call(_iCommand.Connection).SetPropertyAndIgnoreArgument();
-                Expect.Call(_iCommand.Transaction).SetPropertyAndIgnoreArgument();
-                Expect.Call(_iCommand.CommandText).SetPropertyAndIgnoreArgument().Repeat.Any();
-                Expect.Call(_iCommand.ExecuteNonQuery())
-                    .IgnoreArguments()
-                    .Repeat.Times(3) //two for the one migration and once to create the table
-                    .Return(0);
-
-                //insert a record to the SqlMigration table
-                Expect.Call(_iCommand.ExecuteNonQuery())
-                    .IgnoreArguments()
-                    .Repeat.Times(1) //two for the one migration and once to create the table
-                    .Return(0);
-
-                //mock table not existing so we try to make it
-                Expect.Call(_iCommand.ExecuteScalar())
-                    .Return(0);
-
-
-                //now get the check table
-                Expect.Call(_iCommand.ExecuteReader())
-                    .Return(_dataReader);
-
-                //mock one row from the datareader
-                Expect.Call(_dataReader.Read())
-                    .Return(true)
-                    .Repeat.Once();
-
-                Expect.Call(_dataReader.GetString(0))
-                    .Return("2000-01-01_00h00m-test.sql");
-
-            }
-            using(_mock.Playback())
-            {
-                Factory.Overrides.Add(typeof(IDbConnection).FullName, _iConnection);
-                var sqlRunner = new SqlRunner();
-                sqlRunner.ConnectionString = string.Empty;
-                sqlRunner.StartMigrations(migrations, true, true);
-            }
+            //reader to get name
+            _dataReader.Stub(reader => reader.Read()).Return(true);
+            _dataReader.Stub(dataReader => dataReader.GetOrdinal("ErrorNumber")).Return(2000);
+            _dataReader.Stub(dataReader => dataReader.IsDBNull(2000)).Return(isErrorNumberNull);
+            _dataReader.Stub(dataReader => dataReader.GetInt32(2000)).Return(errorNumberToReturn);
         }
 
-        [Test]
-        public void run_sql_test()
-        {
-            using (_mock.Record())
-            {
-                //hand our mocked command in with the CreateCommand method
-                Expect.Call(_iConnection.CreateCommand())
-                    .Return(_iCommand);
 
-                //hand in our mocked transaction
-                Expect.Call(_iConnection.BeginTransaction())
-                    .Return(_iTransaction);
-
-                //make sure it hits the db with the command
-                Expect.Call(_iCommand.Transaction).SetPropertyAndIgnoreArgument();
-                Expect.Call(_iCommand.CommandText).SetPropertyAndIgnoreArgument();
-                Expect.Call(_iCommand.CommandTimeout).SetPropertyAndIgnoreArgument();
-                //Expect.Call(_iCommand.ExecuteNonQuery())
-                //    .IgnoreArguments()
-                //    .Repeat.Times(1) //only once
-                //    .Return(0);
-                Expect.Call(_iCommand.ExecuteReader(CommandBehavior.SingleResult))
-                    .Return(_dataReader);
-
-                Expect.Call(_dataReader.Read()).Return(true);
-                Expect.Call(_dataReader.GetOrdinal("ErrorNumber")).Return(0);
-                Expect.Call(_dataReader.IsDBNull(0)).Return(false);
-                Expect.Call(_dataReader.GetInt32(0)).Return(0);
-
-            }
-            using (_mock.Playback())
-            {
-                Factory.Overrides.Add(typeof(IDbConnection).FullName, _iConnection);
-                var sqlRunner = new SqlRunner();
-                sqlRunner.ConnectionString = string.Empty;
-                sqlRunner.RunSql("sql_string", true);
-            }
-        }
     }
 }

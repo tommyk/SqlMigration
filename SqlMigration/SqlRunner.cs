@@ -13,7 +13,7 @@ namespace SqlMigration
     public class SqlRunner : ISqlRunner
     {
         private const string SqlmigrationTableName = "SqlMigration";
-        private readonly ILog Logger = LogManager.GetLogger(typeof (SqlRunner));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (SqlRunner));
 
 
         public IDbConnection Connection
@@ -55,26 +55,27 @@ namespace SqlMigration
                     command.Transaction = transaction;
                 }
 
-
                 command.CommandText = sqlToRun;
                 IDataReader executeReader = command.ExecuteReader(CommandBehavior.SingleResult);
                 //expecting back a single row with 'ErrorNumber', 'ErrorMessage', and 'Tracing'
-                executeReader.Read();
-                int errorNumber = 0;
-                if (!executeReader.IsDBNull(executeReader.GetOrdinal("ErrorNumber")))
+                if (executeReader.Read())
                 {
-                    executeReader.GetInt32(executeReader.GetOrdinal("ErrorNumber"));
+                    int errorNumber = 0;
+                    int errorPosition = executeReader.GetOrdinal("ErrorNumber");
+                    if (!executeReader.IsDBNull(errorPosition))
+                    {
+                        errorNumber = executeReader.GetInt32(errorPosition);
+                    }
+                    if (errorNumber != 0)
+                    {
+                        var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
+                        var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
+                        Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
+                        Logger.Fatal(string.Format("Message: {0}", errorMessage));
+                        Logger.Fatal(string.Format("Tracing: {0}", tracing));
+                        return -1;
+                    }
                 }
-                if(errorNumber != 0)
-                {
-                    var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
-                    var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
-                    Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
-                    Logger.Fatal(string.Format("Message: {0}", errorMessage));
-                    Logger.Fatal(string.Format("Tracing: {0}", tracing));
-                    return -1;
-                }
-
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
