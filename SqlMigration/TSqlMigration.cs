@@ -7,16 +7,18 @@ namespace SqlMigration
 {
     public class TSqlMigration : Migration
     {
-        private readonly IMigrationHelper _migrationHelper;
-        private readonly IFileIO _fileIo;
+        //private readonly IMigrationHelper _migrationHelper;
+        //private readonly IFileIO _fileIo;
 
-        public TSqlMigration(string filePath, IMigrationHelper migrationHelper, IFileIO fileIo)
-            : base(filePath)
-        {
-            _migrationHelper = migrationHelper;
-            _fileIo = fileIo;
-        }
+        //public TSqlMigration(string filePath)//, IMigrationHelper migrationHelper, IFileIO fileIo)
+        //    : base(filePath)
+        //{
+        //    _migrationHelper = migrationHelper;
+        //    _fileIo = fileIo;
+        //}
 
+
+        public TSqlMigration(string filePath) : base(filePath) { }
 
         public override IList<string> GetSqlCommands()
         {
@@ -30,6 +32,7 @@ namespace SqlMigration
             StringBuilder oneCommand = new StringBuilder();
 
             //loop over each line
+            //todo: get rid of the \r\n and use something from .NET for enivronment newline if you can
             string[] strings = fileContents.Split(new[] { "\r\n" }, StringSplitOptions.None);
             for (int i = 0; i < strings.Length; i++)
             {
@@ -71,7 +74,7 @@ namespace SqlMigration
 
         private string GetFileContents()
         {
-            return _fileIo.ReadConentsOfFile(base.FilePath);
+            return Factory.Get<IFileIO>().ReadConentsOfFile(base.FilePath);
         }
     }
 }

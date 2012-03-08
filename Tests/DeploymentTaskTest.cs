@@ -26,8 +26,8 @@ namespace Tests
 
         void SetupTests(object sender, EventArgs e)
         {
-            this._iMigrationHelper = Mock.StrictMock<IMigrationHelper>();
-            _iFileIo = Mock.StrictMock<IFileIO>();
+            _iMigrationHelper = Mock.StrictMock<IMigrationHelper>().OverloadFactory();
+            _iFileIo = Mock.StrictMock<IFileIO>().OverloadFactory();
         }
 
         //todo: Get rid of the dup'd code for testing!!!!
@@ -39,7 +39,6 @@ namespace Tests
         [Test]
         public void create_deploy_script_on_all_migrations()
         {
-            Assert.Fail("This needs updated to test less. It wants an EXACT copy of output TSQL.");
             //argument stuff
             string scriptDirectory = "c:\test";
             string locationToDeploy = @"a:\test";
@@ -53,34 +52,7 @@ namespace Tests
             migrations.Add(MigrationHelperTest.CreateMigrationObject(secondDate));
             migrations.Add(MigrationHelperTest.CreateMigrationObject(firstDate));
 
-            string fileContents =
-@"BEGIN TRY
-BEGIN TRANSACTION SqlMigrationTransaction
-DECLARE @debug varchar(max);
-set @debug = 'Starting Migrations' + CHAR(13);
-IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h11m-test.sql') = 0
-BEGIN
-set @debug = @debug + CHAR(13) + 'Starting 2008-01-01_01h11m-test.sql'
-exec ('command1')
-exec ('command2')
-set @debug = @debug + CHAR(13) + 'Ending 2008-01-01_01h11m-test.sql'
-INSERT INTO SqlMigration (Name) VALUES ('2008-01-01_01h11m-test.sql')
-END
-IF (SELECT COUNT(NAME) FROM SqlMigration WHERE Name = '2008-01-01_01h12m-test.sql') = 0
-BEGIN
-set @debug = @debug + CHAR(13) + 'Starting 2008-01-01_01h12m-test.sql'
-exec ('command1')
-exec ('command2')
-set @debug = @debug + CHAR(13) + 'Ending 2008-01-01_01h12m-test.sql'
-INSERT INTO SqlMigration (Name) VALUES ('2008-01-01_01h12m-test.sql')
-END
-COMMIT TRANSACTION SqlMigrationTransaction
-SELECT @debug as Tracing
-END TRY
-BEGIN CATCH
-SELECT ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMessage, @debug as Tracing;
-END CATCH";
-
+            string fileContents = SqlResources.deployment_sql;
 
             using (Mock.Record())
             {
@@ -96,7 +68,7 @@ END CATCH";
             {
                 //act like we are pulling and pushing from a:\test, just easier to test against one location
                 var args = new Arguments(new[] { TaskTypeConstants.DeploymentTask, locationToDeploy, ArgumentConstants.ScriptDirectoryArg, scriptDirectory, ArgumentConstants.IncludeTestScriptsArg });
-                var deploymentTask = new DeploymentTask(args, _iMigrationHelper,_iFileIo);
+                var deploymentTask = new DeploymentTask(args);//, _iMigrationHelper,_iFileIo);
 
                 //try to run task
                 int returnVal = deploymentTask.RunTask();

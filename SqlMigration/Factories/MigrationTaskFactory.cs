@@ -12,10 +12,15 @@ namespace SqlMigration.Factories
             //resolve using windsor
             Type migrationType = TaskTypeFactory.GetTaskType(args.TaskType);
 
-            task = (MigrationTask)IoC.Current.Resolve(migrationType,
-                                                                new { arguments = args });
+            //task = (MigrationTask)IoC.Current.Resolve(migrationType, new { arguments = args });
+            task = CreateMigrationTask(migrationType, args);
 
             return task;
+        }
+
+        protected MigrationTask CreateMigrationTask(Type migrationTaskType, Arguments arguments)
+        {
+            return (MigrationTask) Activator.CreateInstance(migrationTaskType, arguments);
         }
     }
 }

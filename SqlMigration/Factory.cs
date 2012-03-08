@@ -13,6 +13,7 @@ namespace SqlMigration
     /// </summary>
     public static class Factory
     {
+        //todo: not public, get rid of stupid string...
         public static readonly Dictionary<string, object> Overrides = new Dictionary<string, object>();
 
         public static TService Get<TService>() where TService : class

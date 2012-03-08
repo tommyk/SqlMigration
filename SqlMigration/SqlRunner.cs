@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Data.SqlClient;
-using Castle.Core.Logging;
+using log4net;
+using log4net.Core;
 using SqlMigration.Contracts;
 
 
@@ -12,7 +13,7 @@ namespace SqlMigration
     public class SqlRunner : ISqlRunner
     {
         private const string SqlmigrationTableName = "SqlMigration";
-        private ILogger _logger = NullLogger.Instance;
+        private readonly ILog Logger = LogManager.GetLogger(typeof (SqlRunner));
 
 
         public IDbConnection Connection
@@ -26,12 +27,6 @@ namespace SqlMigration
             set { Connection.ConnectionString = value; }
         }
        
-        public ILogger Logger
-        {
-            get { return _logger; }
-            set { _logger = value; }
-        }
-
         /// <summary>
         /// Just used to run a peice of SQL.
         /// </summary>
@@ -205,7 +200,7 @@ namespace SqlMigration
             return success;
         }
 
-        private static void WriteOutAllExcpetionInformation(Exception e, ILogger logger)
+        private static void WriteOutAllExcpetionInformation(Exception e, ILog logger)
         {
             if(e != null)
             {

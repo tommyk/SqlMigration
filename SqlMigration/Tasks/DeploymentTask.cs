@@ -12,19 +12,7 @@ namespace SqlMigration.Tasks
 {
     public class DeploymentTask : MigrationTask
     {
-        private readonly IMigrationHelper _migrationHelper;
-        private readonly IFileIO _fileIo;
-
-        #region Constructors
-
-        public DeploymentTask(Arguments arguments, IMigrationHelper migrationHelper, IFileIO fileIo)
-            : base(arguments)
-        {
-            _migrationHelper = migrationHelper;
-            _fileIo = fileIo;
-        }
-
-        #endregion
+        public DeploymentTask(Arguments arguments) : base(arguments) { }
 
         public override int RunTask()
         {
@@ -39,14 +27,14 @@ namespace SqlMigration.Tasks
             bool includeTestData = base.Arguments.DoesArgumentExist(ArgumentConstants.IncludeTestScriptsArg);
 
             //get migrations
-            migrations = _migrationHelper.GetMigrationsInOrder(locationOfScripts, includeTestData);
+            migrations = Factory.Get<IMigrationHelper>().GetMigrationsInOrder(locationOfScripts, includeTestData);
 
             //load up a velocity engine and run the template through it...
             string sqlOutput = CreateSqlOutput(migrations);
 
             //write file out
             string locationToCreateScript = base.Arguments.GetArgumentValue(TaskTypeConstants.DeploymentTask);
-            _fileIo.WriteFile(locationToCreateScript, sqlOutput);
+            Factory.Get<IFileIO>().WriteFile(locationToCreateScript, sqlOutput);
 
             return 0;
         }

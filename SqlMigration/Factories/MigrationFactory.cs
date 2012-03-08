@@ -28,9 +28,15 @@ namespace SqlMigration.Factories
 
             //if we found a type, lets try to create it!!
             if (migrationType != null)
-                migration = (Migration) IoC.Current.Resolve(migrationType, new{filePath = filePath});
+                migration = CreateMigration(migrationType, filePath);
+                //migration = (Migration) IoC.Current.Resolve(migrationType, new{filePath = filePath});
 
             return migration;
+        }
+
+        private static Migration CreateMigration(Type typeToCreate, string filePath)
+        {
+            return (Migration) Activator.CreateInstance(typeToCreate, filePath);
         }
     }
 }

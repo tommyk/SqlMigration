@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Castle.Core.Logging;
+using log4net;
 using SqlMigration.Contracts;
 
 namespace SqlMigration
 {
     public class FileIO : IFileIO
     {
-        private ILogger _logger = NullLogger.Instance;
-        public ILogger Logger
-        {
-            get { return _logger; }
-            set { _logger = value; }
-        }
-
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (FileIO));
 
         public bool Copy(string filePath, string locationToCopyTo)
         {

@@ -1,17 +1,15 @@
-﻿using Castle.Core.Logging;
+﻿using log4net;
 
 namespace SqlMigration.Contracts
 {
     public abstract class MigrationTask
     {
-        private ILogger _logger = NullLogger.Instance;
         private readonly Arguments _arguments;
 
         protected MigrationTask(Arguments arguments)
         {
             _arguments = arguments;
         }
-
 
         public Arguments Arguments
         {
@@ -22,10 +20,9 @@ namespace SqlMigration.Contracts
 
         public abstract int RunTask();
 
-        public ILogger Logger
+        public ILog Logger
         {
-            get { return _logger; }
-            set { _logger = value; }
+            get { return LogManager.GetLogger(this.GetType()); }
         }
     }
 }

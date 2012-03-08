@@ -8,7 +8,9 @@ namespace Tests
         {
             //is it a proxy?
 
-            string fullNameKey = typeof (T).FullName;
+            string fullNameKey = typeof(T).FullName;
+            
+            Factory.Overrides.Remove(fullNameKey);
             Factory.Overrides.Add(fullNameKey, obj);
 
             return obj;

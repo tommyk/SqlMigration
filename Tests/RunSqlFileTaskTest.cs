@@ -27,18 +27,18 @@ namespace Tests
             var connectionString = "asdfasdf";
             string filePath = @"A:\test.sql";
             string sqlFileContents = "create table asdf()";
-            var sqlRunner = MockRepository.GenerateMock<ISqlRunner>();
-            var fileIo = MockRepository.GenerateMock<IFileIO>();
+            
+            var sqlRunner = MockRepository.GenerateMock<ISqlRunner>().OverloadFactory();
+            var fileIo = MockRepository.GenerateMock<IFileIO>().OverloadFactory();
 
             var args = new Arguments(new[] { TaskTypeConstants.RunSqlFileTask, filePath, ArgumentConstants.ConnectionStringArg, connectionString });
 
-            //Arrange
 
             //get file contents...
             fileIo.Stub(io => io.ReadConentsOfFile(filePath)).Return(sqlFileContents);
 
             //Act
-            var runSqlFileTask = new RunSqlFileTask(args, fileIo, sqlRunner);
+            var runSqlFileTask = new RunSqlFileTask(args);//, fileIo, sqlRunner);
             int success = runSqlFileTask.RunTask();
 
             //Assert

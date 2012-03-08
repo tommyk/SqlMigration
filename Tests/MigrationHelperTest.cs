@@ -1,15 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
 using SqlMigration;
-
 using System.Collections.Generic;
 using SqlMigration.Contracts;
+using Rhino.Mocks;
 
 namespace Tests
 {

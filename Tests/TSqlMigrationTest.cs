@@ -26,8 +26,8 @@ namespace Tests
 
         void SetupCrap(object sender, EventArgs e)
         {
-            _migrationHelper = Mock.DynamicMock<IMigrationHelper>();
-            _fileIo = Mock.DynamicMock<IFileIO>();
+            _migrationHelper = Mock.DynamicMock<IMigrationHelper>().OverloadFactory();
+            _fileIo = Mock.DynamicMock<IFileIO>().OverloadFactory();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Tests
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _migrationHelper, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath);//, _migrationHelper, _fileIo);
                 var sqlCommand = sqlMigration.GetSqlCommands();
 
                 Assert.AreEqual(fileContents, sqlCommand[0], "This should be the same contents");
@@ -77,7 +77,7 @@ GO";
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _migrationHelper, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath);//, _migrationHelper, _fileIo);
                 var sqlCommand = sqlMigration.GetSqlCommands();
 
                 Assert.AreEqual("test contents category\r\n", sqlCommand[0], "This should contain no GO or go statements");
@@ -114,7 +114,7 @@ GO";
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _migrationHelper, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath);//, _migrationHelper, _fileIo);
                 IList<string> sqlCommand = sqlMigration.GetSqlCommands();
 
                 //there should be 3 commands inside this fake sql file
@@ -144,7 +144,7 @@ TEST";
             }
             using (Mock.Playback())
             {
-                var sqlMigration = new TSqlMigration(filePath, _migrationHelper, _fileIo);
+                var sqlMigration = new TSqlMigration(filePath);//, _migrationHelper, _fileIo);
                 IList<string> sqlCommand = sqlMigration.GetSqlCommands();
 
                 //there should be 3 commands inside this fake sql file

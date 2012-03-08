@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
 using SqlMigration;
 using SqlMigration.Contracts;
 using SqlMigration.Factories;
@@ -17,18 +15,6 @@ namespace Tests
     [TestFixture]
     public class MigrationFactoryTest : BaseTestClass
     {
-
-        //public MigrationFactoryTest()
-        //{
-        //    base.Setup += Setup;
-        //}
-
-        //void Setup(object sender, EventArgs e)
-        //{
-        //    //setup the ioc
-        //    //IoC.Current.SetupWindsorContainer();
-        //}
-
         /// <summary>
         ///A test for RunTask
         ///</summary>
@@ -39,17 +25,10 @@ namespace Tests
                         Is.Null);
         }
 
-        [Test]
+        [Test, ExpectedException(typeof(ArgumentNullException))]
         public void fail_if_fileExtenstion_is_null_or_empty()
         {
-            try
-            {
-                MigrationFactory.GetMigrationByFileExtenstion(null);
-                Assert.Fail("This should not be hit");
-            }
-            catch (ArgumentNullException ex)
-            {
-            }
+            MigrationFactory.GetMigrationByFileExtenstion(null);
         }
 
         [Test]
