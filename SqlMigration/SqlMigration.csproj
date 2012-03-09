@@ -75,6 +75,7 @@
     <Compile Include="ArgumentConstants.cs" />
     <Compile Include="Contracts\IFileIO.cs" />
     <Compile Include="Contracts\IMigrationTaskFactory.cs" />
+    <Compile Include="Extenstions.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="MigrationHelper.cs" />
     <Compile Include="FileIO.cs" />

@@ -16,6 +16,13 @@ namespace SqlMigration
         //todo: not public, get rid of stupid string...
         public static readonly Dictionary<string, object> Overrides = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Reads from the AppSettings in the Configuration file that links interface to
+        /// a concrete implementation.  Classes must have a default constructor
+        /// to be created.
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <returns></returns>
         public static TService Get<TService>() where TService : class
         {
             string fullName = typeof(TService).FullName;

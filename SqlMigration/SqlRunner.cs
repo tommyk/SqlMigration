@@ -13,7 +13,7 @@ namespace SqlMigration
     public class SqlRunner : ISqlRunner
     {
         private const string SqlmigrationTableName = "SqlMigration";
-        private static readonly ILog Logger = LogManager.GetLogger(typeof (SqlRunner));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(SqlRunner));
 
 
         public IDbConnection Connection
@@ -26,7 +26,7 @@ namespace SqlMigration
             get { return Connection.ConnectionString; }
             set { Connection.ConnectionString = value; }
         }
-       
+
         /// <summary>
         /// Just used to run a peice of SQL.
         /// </summary>
@@ -56,26 +56,32 @@ namespace SqlMigration
                 }
 
                 command.CommandText = sqlToRun;
-                IDataReader executeReader = command.ExecuteReader(CommandBehavior.SingleResult);
+                IDataReader executeReader = command.ExecuteReader(CommandBehavior.Default);
                 //expecting back a single row with 'ErrorNumber', 'ErrorMessage', and 'Tracing'
-                if (executeReader.Read())
+                do
                 {
-                    int errorNumber = 0;
-                    int errorPosition = executeReader.GetOrdinal("ErrorNumber");
-                    if (!executeReader.IsDBNull(errorPosition))
+                    if (executeReader.Read())
                     {
-                        errorNumber = executeReader.GetInt32(errorPosition);
+                        int errorNumber = 0;
+                        int errorPosition;
+                        //if we can't find it we continue
+                        if (!executeReader.TryGetOrdinal("ErrorNumber", out errorPosition))
+                            continue;
+
+                        if (!executeReader.IsDBNull(errorPosition))
+                            errorNumber = executeReader.GetInt32(errorPosition);
+
+                        if (errorNumber != 0)
+                        {
+                            var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
+                            var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
+                            Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
+                            Logger.Fatal(string.Format("Message: {0}", errorMessage));
+                            Logger.Fatal(string.Format("Tracing: {0}", tracing));
+                            return -1;
+                        }
                     }
-                    if (errorNumber != 0)
-                    {
-                        var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
-                        var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
-                        Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
-                        Logger.Fatal(string.Format("Message: {0}", errorMessage));
-                        Logger.Fatal(string.Format("Tracing: {0}", tracing));
-                        return -1;
-                    }
-                }
+                } while (executeReader.NextResult());
 
                 //commit transaction if we are running under one
                 if (runInsideTransaction)
@@ -186,7 +192,7 @@ namespace SqlMigration
                     Logger.Error(string.Format("Exception Message: {0}", ex.Message));
                 }
                 Logger.Error("Exception " + e.GetType() + " encountered while running sql files.");
-                WriteOutAllExcpetionInformation(e,Logger);
+                WriteOutAllExcpetionInformation(e, Logger);
             }
             finally
             {
@@ -203,11 +209,11 @@ namespace SqlMigration
 
         private static void WriteOutAllExcpetionInformation(Exception e, ILog logger)
         {
-            if(e != null)
+            if (e != null)
             {
-                logger.Error(e.Message);
-                if (e.InnerException != null) 
-                    WriteOutAllExcpetionInformation(e.InnerException,logger);
+                logger.Error(e.Message, e);
+                if (e.InnerException != null)
+                    WriteOutAllExcpetionInformation(e.InnerException, logger);
             }
         }
 
