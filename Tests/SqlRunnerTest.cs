@@ -47,7 +47,7 @@ namespace Tests
                 .Return(_iTransaction);
 
             //setup reader and pass back
-            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.SingleResult)).Return(_dataReader);
+            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.Default)).Return(_dataReader);
             //setup the reader
             SetupDataReader(0, false);
 
@@ -65,7 +65,7 @@ namespace Tests
         public void no_transaction_get_no_error()
         {
             //setup reader and pass back
-            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.SingleResult)).Return(_dataReader);
+            _iCommand.Stub(x => x.ExecuteReader(CommandBehavior.Default)).Return(_dataReader);
 
             //setup reader
             SetupDataReader(0, false);
