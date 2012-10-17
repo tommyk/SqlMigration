@@ -75,9 +75,9 @@ namespace SqlMigration
                         {
                             var errorMessage = executeReader.GetString(executeReader.GetOrdinal("ErrorMessage"));
                             var tracing = executeReader.GetString(executeReader.GetOrdinal("Tracing"));
+                            Logger.Fatal(string.Format("Tracing: {0}", tracing));
                             Logger.Fatal(string.Format("ErrorNumber: {0}", errorNumber));
                             Logger.Fatal(string.Format("Message: {0}", errorMessage));
-                            Logger.Fatal(string.Format("Tracing: {0}", tracing));
                             return -1;
                         }
                     }
