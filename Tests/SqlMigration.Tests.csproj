@@ -89,7 +89,6 @@
     <Compile Include="FileIOTest.cs" />
     <Compile Include="MigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sql_Files.cs" />
     <Compile Include="MigrateDatabaseForwardTaskTest.cs" />
     <Compile Include="Extenstions.cs" />
     <Compile Include="TSqlMigrationTest.cs" />

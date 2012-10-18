@@ -73,6 +73,8 @@
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="ArgumentConstants.cs" />
+    <Compile Include="ConfigurationManagerWrapper.cs" />
+    <Compile Include="Contracts\IConfigurationManager.cs" />
     <Compile Include="Contracts\IFileIO.cs" />
     <Compile Include="Contracts\IMigrationTaskFactory.cs" />
     <Compile Include="Extenstions.cs" />

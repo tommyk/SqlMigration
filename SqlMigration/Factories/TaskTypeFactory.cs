@@ -27,7 +27,7 @@ namespace SqlMigration.Factories
 
         public static Type GetTaskType(string taskType)
         {
-            return _taskWithImplementationTypes.Where(pair => pair.Key == taskType).Single().Value;
+            return _taskWithImplementationTypes.Single(pair => pair.Key == taskType).Value;
         }
     }
 }

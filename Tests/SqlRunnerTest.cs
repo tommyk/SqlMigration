@@ -3,6 +3,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SqlMigration;
+using SqlMigration.Contracts;
 
 namespace Tests
 {
@@ -17,12 +18,14 @@ namespace Tests
         private IDbCommand _iCommand;
         private IDbTransaction _iTransaction;
         private IDataReader _dataReader;
+        private IConfigurationManager _configurationManager;
 
 
         //Use TestInitialize to run code before running each test
         [SetUp]
         public void MyTestInitialize()
         {
+            _configurationManager = MockRepository.GenerateMock<IConfigurationManager>().OverloadFactory();
             _iConnection = MockRepository.GenerateMock<IDbConnection>().OverloadFactory();
             _iCommand = MockRepository.GenerateMock<IDbCommand>();
             _iTransaction = MockRepository.GenerateMock<IDbTransaction>();
@@ -31,6 +34,9 @@ namespace Tests
             //create command
             _iConnection.Stub(connection => connection.CreateCommand())
                 .Return(_iCommand);
+
+            _configurationManager.Stub(x => x.AppSettings["commandTimeout"])
+                .Return(22.ToString());
         }
 
         [TearDown]
@@ -59,6 +65,7 @@ namespace Tests
 
             _iConnection.AssertWasCalled(connection1 => connection1.BeginTransaction());
             _iTransaction.AssertWasCalled(transaction => transaction.Commit());
+            _iCommand.AssertWasCalled(x => x.CommandTimeout = 22);
         }
 
         [Test]
