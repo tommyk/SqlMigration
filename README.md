@@ -24,10 +24,10 @@ Do not edit already run scripts as they will not be run again, just create a new
 This is to migrate the database forward using the SqlMigration tool.  
 Example: SqlMigration.Runner.exe /m /sd "c:\your\migrations\folder" /cs "your connection string"
 ####Parameters
-/m - This is the task to migrate forward
-/sd - Scripts migration folder
-/cs - Connection string to database
-/t - Include test scripts (OPTIONAL)
+/m - This is the task to migrate forward  
+/sd - Scripts migration folder  
+/cs - Connection string to database  
+/t - Include test scripts (OPTIONAL)  
 
 ###Create a deployment script
 This is to create a SQL script that the same SQL used in the Migrate forward, except that it just produces the SQL script for you.
