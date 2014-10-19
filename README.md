@@ -8,13 +8,13 @@ The process is very simple.  Each migration file is run only once.  Once it is r
 
 ##Migration folder
 
-This folder contains sql change scripts with filenames with the correct format for SqlMigration to pick up on.  It can be anywhere as you pass this location in during usage.  
+This folder contains sql change scripts with file names with the correct format for SqlMigration to pick up on.  It can be anywhere as you pass this location in during usage.  
 
 If you want to add some test data so you can test your datalayer or do small integration tests easily on your CI builds, you can include a folder called 'test' inside your migration folder.  The files follow the same format as regular migrations, and will only be run included in the deployment script if you use the /t option.
 
 ##Pro tips
 
-Do not rename or delete your change scripts, as you may make creating your current database schema / structure impossible.  
+Do not rename or delete your change scripts, as you may make creating your current database schema / structure impossible.
 
 Do not edit already run scripts as they will not be run again, just create a new script to make your changes. Each script is immutable in a sense.
 
@@ -30,9 +30,9 @@ Example: SqlMigration.Runner.exe /m /sd "c:\your\migrations\folder" /cs "your co
 /t - Include test scripts (OPTIONAL)  
 
 ###Create a deployment script
-This is to create a SQL script that the same SQL used in the Migrate forward, except that it just produces the SQL script for you.
+This is to create a SQL script that the same SQL used in the Migrate forward, except that it just produces the SQL script for you.  
 Example: SqlMigration.Runner.exe /d "deployment_script.sql" /sd "c:\your\migrations\folder"
 ####Parameters
-/d - This is the task to create a deployment, and you pass in the file name you want your deployment script saved to.
-/sd - Scripts migration folder
-
+/d - This is the task to create a deployment, and you pass in the file name you want your deployment script saved to.  
+/sd - Scripts migration folder  
+/t - Include test scripts (OPTIONAL)
