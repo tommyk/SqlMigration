@@ -35,3 +35,4 @@ Example: SqlMigration.Runner.exe /d "deployment_script.sql" /sd "c:\your\migrati
 ####Parameters
 /d - This is the task to create a deployment, and you pass in the file name you want your deployment script saved to.
 /sd - Scripts migration folder
+
