@@ -7,6 +7,7 @@
 	<property name="sqlmigration.solution" value="${root.folder}\SqlMigration.sln" />
 	<property name="build.target" value="debug" />
 	<property name="build.folder" value="${root.folder}\build\${build.target}" />
+  <property name="nuget.exe" value=".\.nuget\nuget.exe"></property>
 
 	<!--load up custom nant tasks-->
 
@@ -38,4 +39,34 @@
 		<property name="build.folder" value="${root.folder}\build\${build.target}" />
 	</target>
 
+  <target name="build_test_and_package" depends="build test">
+    <call target="set_release"></call>
+    <call target="build"></call>
+    <call target="package_nuget"></call>
+  </target>
+
+  <target name="package_nuget">
+    <!-- Create the folders -->
+    <mkdir dir="${root.folder}\build\nuget_setup"></mkdir>
+    <mkdir dir="${root.folder}\build\nuget_setup\lib"></mkdir>
+    <mkdir dir="${root.folder}\build\nuget_setup\content"></mkdir>
+    <mkdir dir="${root.folder}\build\nuget_setup\tools"></mkdir>
+    
+    <!--copy the release files into the tools folder -->
+    <copy todir="${root.folder}\build\nuget_setup\tools">
+      <fileset basedir="${build.folder}">
+        <include name="*"></include>
+      </fileset>
+    </copy>
+
+    <copy file="${root.folder}\Package.nuspec" tofile="${root.folder}\build\nuget_setup\Package.nuspec"></copy>
+    
+    <!--pack the nuget stuff up-->
+    <exec program="nuget.exe"
+          basedir="${root.folder}\.nuget"
+          workingdir="${root.folder}\build\nuget_setup"
+          commandline="pack Package.nuspec"></exec>
+    
+  </target>
+  
 </project>
