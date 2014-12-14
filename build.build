@@ -55,7 +55,7 @@
     <!--copy the release files into the tools folder -->
     <copy todir="${root.folder}\build\nuget_setup\tools">
       <fileset basedir="${build.folder}">
-        <include name="*"></include>
+        <include name="**"></include>
       </fileset>
     </copy>
 

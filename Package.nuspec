@@ -3,7 +3,7 @@
   <metadata>
     <id>SqlMigration</id>
     <!-- make sure this matches the assembly version-->
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <authors>tommy.kelly</authors>
     <owners>tommy.kelly</owners>
     <!--<licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>-->
