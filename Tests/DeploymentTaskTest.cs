@@ -71,7 +71,7 @@ namespace Tests
                 var deploymentTask = new DeploymentTask(args);//, _iMigrationHelper,_iFileIo);
 
                 //try to run task
-                int returnVal = deploymentTask.RunTask();
+                int returnVal = deploymentTask.Run();
 
                 Assert.AreEqual(0, returnVal, "We should get a clean run from this");
             }

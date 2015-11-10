@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using System;
+using log4net;
 
 namespace SqlMigration.Contracts
 {
@@ -18,7 +19,20 @@ namespace SqlMigration.Contracts
 
         public string TaskType { get; set; }
 
-        public abstract int RunTask();
+        public int Run()
+        {
+            try
+            {
+                return RunTask();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return -1;
+            }
+        }
+
+        protected abstract int RunTask();
 
         public ILog Logger
         {

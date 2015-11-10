@@ -20,7 +20,7 @@ namespace SqlMigration.Runner
                 //setup a task and run it
                 MigrationTask task = Factory.Get<IMigrationTaskFactory>().GetMigrationTaskByTaskType(arguments);
 
-                returnValue = task.RunTask();
+                returnValue = task.Run();
             }
             else
             {
