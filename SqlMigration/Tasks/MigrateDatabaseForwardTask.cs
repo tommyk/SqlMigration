@@ -43,8 +43,13 @@ namespace SqlMigration.Tasks
             tempArguments.CommandArguments.Insert(1, fileName);
 
             //create SQL script
-            MigrationTaskFactory.GetMigrationTaskByTaskType(tempArguments).Run();
+            var deploymentReturn = MigrationTaskFactory.GetMigrationTaskByTaskType(tempArguments).Run();
 
+            if (deploymentReturn != 0)
+            {
+                return deploymentReturn;
+            }
+            
             Logger.Info(string.Format("About to run SQL file located at {0}", fileName));
 
             SqlRunner.ConnectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);
