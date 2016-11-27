@@ -33,7 +33,7 @@ namespace SqlMigration.Tasks
         {
         }
 
-        public override int RunTask()
+        protected override int RunTask()
         {
             //create temp file location
             string fileName = Path.GetTempPath() + Guid.NewGuid() + ".sql";
@@ -43,8 +43,13 @@ namespace SqlMigration.Tasks
             tempArguments.CommandArguments.Insert(1, fileName);
 
             //create SQL script
-            MigrationTaskFactory.GetMigrationTaskByTaskType(tempArguments).RunTask();
+            var deploymentReturn = MigrationTaskFactory.GetMigrationTaskByTaskType(tempArguments).Run();
 
+            if (deploymentReturn != 0)
+            {
+                return deploymentReturn;
+            }
+            
             Logger.Info(string.Format("About to run SQL file located at {0}", fileName));
 
             SqlRunner.ConnectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);

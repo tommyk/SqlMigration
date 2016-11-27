@@ -17,7 +17,7 @@ namespace SqlMigration.Tasks
 
         public RunSqlFileTask(Arguments arguments) : base(arguments) { }
 
-        public override int RunTask()
+        protected override int RunTask()
         {
             //get connection string
             string connectionString = base.Arguments.GetArgumentValue(ArgumentConstants.ConnectionStringArg);

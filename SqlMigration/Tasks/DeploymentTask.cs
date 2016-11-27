@@ -14,7 +14,7 @@ namespace SqlMigration.Tasks
     {
         public DeploymentTask(Arguments arguments) : base(arguments) { }
 
-        public override int RunTask()
+        protected override int RunTask()
         {
             /// Steps to create deploy directory:
             /// 1. Get migrations neccessary to use (may need to filter on date)

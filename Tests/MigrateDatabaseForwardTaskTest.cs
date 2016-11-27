@@ -43,7 +43,7 @@ namespace Tests
                 Expect.Call(migrationTaskFactory.GetMigrationTaskByTaskType(null))
                     .IgnoreArguments()
                     .Return(migrationTask);
-                Expect.Call(migrationTask.RunTask()).Return(0);
+                Expect.Call(migrationTask.Run()).Return(0);
 
                 //get text for sql
                 Expect.Call(fileIO.ReadConentsOfFile(null))
@@ -58,7 +58,7 @@ namespace Tests
             using (mock.Playback())
             {
                 var runSqlTask = new MigrateDatabaseForwardTask(args);
-                int success = runSqlTask.RunTask();
+                int success = runSqlTask.Run();
 
                 Assert.AreEqual(0, success, "we should get 0 reuslting in a success");
             }

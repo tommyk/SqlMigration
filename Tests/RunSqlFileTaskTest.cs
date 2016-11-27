@@ -39,7 +39,7 @@ namespace Tests
 
             //Act
             var runSqlFileTask = new RunSqlFileTask(args);//, fileIo, sqlRunner);
-            int success = runSqlFileTask.RunTask();
+            int success = runSqlFileTask.Run();
 
             //Assert
             sqlRunner.AssertWasCalled(x => x.ConnectionString = connectionString);
