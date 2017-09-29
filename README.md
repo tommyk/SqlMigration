@@ -29,7 +29,8 @@ CREATE TABLE SqlMigration (	Name varchar(512) NOT NULL	)
 ### Migrate forward
 This is to migrate the database forward using the SqlMigration tool.  
 Example: SqlMigration.Runner.exe /m /sd "c:\your\migrations\folder" /cs "your connection string"
-####Parameters
+
+#### Parameters
 /m - This is the task to migrate forward  
 /sd - Scripts migration folder  
 /cs - Connection string to database  
@@ -38,6 +39,7 @@ Example: SqlMigration.Runner.exe /m /sd "c:\your\migrations\folder" /cs "your co
 ### Create a deployment script
 This is to create a SQL script that the same SQL used in the Migrate forward, except that it just produces the SQL script for you.  
 Example: SqlMigration.Runner.exe /d "deployment_script.sql" /sd "c:\your\migrations\folder"
+
 #### Parameters
 /d - This is the task to create a deployment, and you pass in the file name you want your deployment script saved to.  
 /sd - Scripts migration folder  
